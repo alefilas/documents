@@ -1,4 +1,4 @@
-package model.user;
+package ru.alefilas.model.user;
 
 import lombok.Data;
 

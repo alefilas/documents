@@ -1,8 +1,8 @@
-package model.document;
+package ru.alefilas.model.document;
 
 import lombok.Data;
-import model.directory.Directory;
-import model.user.User;
+import ru.alefilas.model.directory.Directory;
+import ru.alefilas.model.user.User;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -27,7 +27,6 @@ public class Document {
     private User user;
 
     private Directory directory;
-
 
     public void addFile(Path path) {
         files.add(path);

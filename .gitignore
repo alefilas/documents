@@ -1,1 +1,7 @@
 .idea
+
+/documents-contoller/target/
+/documents-email/target/
+/documents-service/target/
+/documents-repository/target/
+/documents-model/target/

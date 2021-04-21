@@ -1,8 +1,4 @@
-import model.document.Document;
-import model.document.DocumentType;
-import model.user.User;
-
-import java.util.List;
+import ru.alefilas.model.user.User;
 
 public interface DirectoryService {
 

@@ -1,8 +1,8 @@
-package model.moderation;
+package ru.alefilas.model.moderation;
 
 import lombok.Data;
-import model.directory.Directory;
-import model.document.Document;
+import ru.alefilas.model.directory.Directory;
+import ru.alefilas.model.document.Document;
 
 @Data
 public class ModerationTicket {

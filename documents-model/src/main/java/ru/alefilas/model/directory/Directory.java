@@ -1,8 +1,8 @@
-package model.directory;
+package ru.alefilas.model.directory;
 
 import lombok.Data;
-import model.document.Document;
-import model.user.User;
+import ru.alefilas.model.document.Document;
+import ru.alefilas.model.user.User;
 
 import java.util.List;
 
