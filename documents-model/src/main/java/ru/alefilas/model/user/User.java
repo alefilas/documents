@@ -1,4 +1,4 @@
-package model.user;
+package ru.alefilas.model.user;
 
 import lombok.Data;
 
@@ -6,11 +6,9 @@ import lombok.Data;
 public class User {
 
     private Long id;
-
     private String name;
-
+    private String password;
     private String email;
-
     private Role role;
 
 }

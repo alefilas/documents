@@ -1,6 +1,6 @@
-import model.directory.Directory;
-import model.moderation.ModerationTicket;
-import model.user.User;
+import ru.alefilas.model.document.Directory;
+import ru.alefilas.model.moderation.ModerationTicket;
+import ru.alefilas.model.user.User;
 
 import java.util.List;
 

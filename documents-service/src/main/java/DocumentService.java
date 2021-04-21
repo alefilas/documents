@@ -1,6 +1,6 @@
-import model.document.Document;
-import model.document.DocumentType;
-import model.user.User;
+import ru.alefilas.model.document.Document;
+import ru.alefilas.model.document.DocumentType;
+import ru.alefilas.model.user.User;
 
 import java.util.List;
 
