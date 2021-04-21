@@ -1,0 +1,197 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="add_roles_table" author="alefilas">
+        <createTable tableName="roles">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="role" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_priorities_table" author="alefilas">
+        <createTable tableName="priorities">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="priority" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_document_type_table" author="alefilas">
+        <createTable tableName="document_types">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="document_type" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_status_table" author="alefilas">
+        <createTable tableName="moderation_status">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="status" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_permit_type_table" author="alefilas">
+        <createTable tableName="permit_types">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="permit_type" type="VARCHAR(32)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_users_table" author="alefilas">
+        <createTable tableName="users">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="integer">
+                <constraints references="roles(id)" foreignKeyName="fk_user_role"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_versions_table" author="alefilas">
+        <createTable tableName="versions">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="title" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="moderation_status_id" type="integer">
+                <constraints references="moderation_status(id)" foreignKeyName="fk_version_status"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_files_table" author="alefilas">
+        <createTable tableName="files">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="path" type="VARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version_id" type="integer">
+                <constraints references="versions(id)" foreignKeyName="fk_file_version"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_entities_table" author="alefilas">
+        <createTable tableName="entities">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="creation_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="directory_id" type="integer">
+                <constraints references="entities(id)" foreignKeyName="fk_entity_entity"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_directories_table" author="alefilas">
+        <createTable tableName="directories">
+            <column name="id" type="integer">
+                <constraints references="entities(id)" foreignKeyName="fk_directory_entity"/>
+            </column>
+            <column name="title" type="varchar(32)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_documents_table" author="alefilas">
+        <createTable tableName="documents">
+            <column name="id" type="integer">
+                <constraints references="entities(id)" foreignKeyName="fk_document_entity" unique="true"/>
+            </column>
+            <column name="current_version_id" type="integer">
+                <constraints references="versions(id)" foreignKeyName="fk_document_version"/>
+            </column>
+            <column name="document_type_id" type="integer">
+                <constraints references="document_types(id)" foreignKeyName="fk_document_type"/>
+            </column>
+            <column name="priority_id" type="integer">
+                <constraints references="priorities(id)" foreignKeyName="fk_document_priority"/>
+            </column>
+            <column name="user_id" type="integer">
+                <constraints references="users(id)" foreignKeyName="fk_document_user"/>
+            </column>
+            <column name="status_id" type="integer">
+                <constraints references="moderation_status(id)" foreignKeyName="fk_document_status"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_ticket_table" author="alefilas">
+        <createTable tableName="moderation_tickets">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="document_id" type="integer">
+                <constraints references="documents(id)" foreignKeyName="fk_ticket_document"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_permit_table" author="alefilas">
+        <createTable tableName="permits">
+            <column name="id" type="serial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="type_id" type="integer">
+                <constraints references="permit_types(id)" foreignKeyName="fk_permit_type"/>
+            </column>
+            <column name="user_id" type="integer">
+                <constraints references="users(id)" foreignKeyName="fk_permit_user"/>
+            </column>
+            <column name="document_id" type="integer">
+                <constraints references="documents(id)" foreignKeyName="fk_permit_document"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="alter_versions_table" author="alefilas">
+        <addColumn tableName="versions">
+            <column name="document_id" type="integer">
+                <constraints references="documents(id)" foreignKeyName="fk_version_document"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

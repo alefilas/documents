@@ -1,0 +1,124 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="add_roles" author="alefilas">
+
+        <insert tableName="roles">
+            <column name="role" value="ADMIN"/>
+        </insert>
+
+        <insert tableName="roles">
+            <column name="role" value="USER"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="add_priorities" author="alefilas">
+
+        <insert tableName="priorities">
+            <column name="priority" value="HIGH"/>
+        </insert>
+
+        <insert tableName="priorities">
+            <column name="priority" value="MEDIUM"/>
+        </insert>
+
+        <insert tableName="priorities">
+            <column name="priority" value="LOW"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="add_moderation_status" author="alefilas">
+
+        <insert tableName="moderation_status">
+            <column name="status" value="ON_MODERATION"/>
+        </insert>
+
+        <insert tableName="moderation_status">
+            <column name="status" value="CONFIRMED"/>
+        </insert>
+
+        <insert tableName="moderation_status">
+            <column name="status" value="REJECTED"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="add_permit_types" author="alefilas">
+
+        <insert tableName="permit_types">
+            <column name="permit_type" value="READ"/>
+        </insert>
+
+        <insert tableName="permit_types">
+            <column name="permit_type" value="WRITE"/>
+        </insert>
+
+        <insert tableName="permit_types">
+            <column name="permit_type" value="MODERATE"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="add_permit_types" author="alefilas">
+
+        <insert tableName="permit_types">
+            <column name="permit_type" value="READ"/>
+        </insert>
+
+        <insert tableName="permit_types">
+            <column name="permit_type" value="WRITE"/>
+        </insert>
+
+        <insert tableName="permit_types">
+            <column name="permit_type" value="MODERATE"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="add_document_types" author="alefilas">
+
+        <insert tableName="document_types">
+            <column name="document_type" value="LETTER"/>
+        </insert>
+
+        <insert tableName="document_types">
+            <column name="document_type" value="FAX"/>
+        </insert>
+
+        <insert tableName="document_types">
+            <column name="document_type" value="COMMAND"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet id="add_users" author="alefilas">
+
+        <insert tableName="users">
+            <column name="name" value="Alex"/>
+            <column name="password" value="123"/>
+            <column name="email" value="123@mail.ru"/>
+            <column name="role_id" value="1"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="name" value="Ivan"/>
+            <column name="password" value="ivan"/>
+            <column name="email" value="ivan@mail.ru"/>
+            <column name="role_id" value="2"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="name" value="Petr"/>
+            <column name="password" value="petr"/>
+            <column name="email" value="petr@mail.ru"/>
+            <column name="role_id" value="2"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>
