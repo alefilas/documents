@@ -1,34 +1,29 @@
 package ru.alefilas.model.document;
 
 import lombok.Data;
-import ru.alefilas.model.directory.Directory;
+import lombok.EqualsAndHashCode;
+
+import ru.alefilas.model.moderation.ModerationStatus;
 import ru.alefilas.model.user.User;
 
 import java.nio.file.Path;
-import java.util.List;
 
+
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class Document {
+public class Document extends AbstractEntity {
 
-    private Long id;
-
-    private String title;
-
-    private String description;
-
-    private List<Path> files;
-
-    private Integer version;
-
-    private DocumentType documentType;
-
+    private DocumentVersion currentVersion;
     private DocumentPriority documentPriority;
-
     private User user;
-
-    private Directory directory;
+    private ModerationStatus status;
 
     public void addFile(Path path) {
-        files.add(path);
+        currentVersion.addFile(path);
+    }
+
+    @Override
+    public boolean isDocument() {
+        return true;
     }
 }
