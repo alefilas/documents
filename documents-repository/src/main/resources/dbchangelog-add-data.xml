@@ -4,29 +4,29 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <changeSet id="add_roles" author="alefilas">
+    <changeSet id="add_role" author="alefilas">
 
-        <insert tableName="roles">
+        <insert tableName="role">
             <column name="role" value="ADMIN"/>
         </insert>
 
-        <insert tableName="roles">
+        <insert tableName="role">
             <column name="role" value="USER"/>
         </insert>
 
     </changeSet>
 
-    <changeSet id="add_priorities" author="alefilas">
+    <changeSet id="add_priority" author="alefilas">
 
-        <insert tableName="priorities">
+        <insert tableName="priority">
             <column name="priority" value="HIGH"/>
         </insert>
 
-        <insert tableName="priorities">
+        <insert tableName="priority">
             <column name="priority" value="MEDIUM"/>
         </insert>
 
-        <insert tableName="priorities">
+        <insert tableName="priority">
             <column name="priority" value="LOW"/>
         </insert>
 
@@ -35,68 +35,52 @@
     <changeSet id="add_moderation_status" author="alefilas">
 
         <insert tableName="moderation_status">
-            <column name="status" value="ON_MODERATION"/>
+            <column name="moderation_status" value="ON_MODERATION"/>
         </insert>
 
         <insert tableName="moderation_status">
-            <column name="status" value="CONFIRMED"/>
+            <column name="moderation_status" value="CONFIRMED"/>
         </insert>
 
         <insert tableName="moderation_status">
-            <column name="status" value="REJECTED"/>
+            <column name="moderation_status" value="REJECTED"/>
         </insert>
 
     </changeSet>
 
-    <changeSet id="add_permit_types" author="alefilas">
+    <changeSet id="add_permit_type" author="alefilas">
 
-        <insert tableName="permit_types">
+        <insert tableName="permit_type">
             <column name="permit_type" value="READ"/>
         </insert>
 
-        <insert tableName="permit_types">
+        <insert tableName="permit_type">
             <column name="permit_type" value="WRITE"/>
         </insert>
 
-        <insert tableName="permit_types">
+        <insert tableName="permit_type">
             <column name="permit_type" value="MODERATE"/>
         </insert>
 
     </changeSet>
 
-    <changeSet id="add_permit_types" author="alefilas">
+    <changeSet id="add_document_type" author="alefilas">
 
-        <insert tableName="permit_types">
-            <column name="permit_type" value="READ"/>
-        </insert>
-
-        <insert tableName="permit_types">
-            <column name="permit_type" value="WRITE"/>
-        </insert>
-
-        <insert tableName="permit_types">
-            <column name="permit_type" value="MODERATE"/>
-        </insert>
-
-    </changeSet>
-
-    <changeSet id="add_document_types" author="alefilas">
-
-        <insert tableName="document_types">
+        <insert tableName="document_type">
             <column name="document_type" value="LETTER"/>
         </insert>
 
-        <insert tableName="document_types">
+        <insert tableName="document_type">
             <column name="document_type" value="FAX"/>
         </insert>
 
-        <insert tableName="document_types">
+        <insert tableName="document_type">
             <column name="document_type" value="COMMAND"/>
         </insert>
 
     </changeSet>
 
-    <changeSet id="add_users" author="alefilas">
+    <changeSet id="add_user" author="alefilas">
 
         <insert tableName="users">
             <column name="name" value="Alex"/>

@@ -16,6 +16,7 @@ public class Document extends AbstractEntity {
     private DocumentVersion currentVersion;
     private DocumentPriority documentPriority;
     private User user;
+    private String type;
     private ModerationStatus status;
 
     public void addFile(Path path) {

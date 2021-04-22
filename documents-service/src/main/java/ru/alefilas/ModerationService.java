@@ -1,3 +1,5 @@
+package ru.alefilas;
+
 import ru.alefilas.model.document.Directory;
 import ru.alefilas.model.moderation.ModerationTicket;
 import ru.alefilas.model.user.User;
