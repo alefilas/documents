@@ -27,12 +27,26 @@
             <artifactId>postgresql</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-maven-plugin</artifactId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -42,17 +56,12 @@
             <build>
                 <plugins>
                     <plugin>
-                        <!--start with basic information to get Liquibase plugin:
-                        include <groupId>, <artifactID>, and <version> elements-->
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
-                        <version>${liquibase.version}</version>
+                        <version>4.3.3</version>
                         <configuration>
-                            <!--set values for Liquibase properties and settings
-                            for example, the location of a properties file to use-->
                             <propertyFile>liquibase.properties</propertyFile>
                         </configuration>
-
                     </plugin>
                 </plugins>
             </build>

@@ -1,3 +1,5 @@
+package ru.alefilas;
+
 import ru.alefilas.model.user.User;
 
 public interface DirectoryService {
