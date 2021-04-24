@@ -1,22 +1,31 @@
 package ru.alefilas;
 
-import org.w3c.dom.DocumentType;
 import ru.alefilas.model.document.Directory;
 import ru.alefilas.model.document.Document;
 import ru.alefilas.model.document.AbstractEntity;
 import ru.alefilas.model.document.DocumentVersion;
-import ru.alefilas.model.user.User;
 
 import java.util.List;
 
 public interface DocumentService {
 
-    List<String> getAllDocumentTypes();
+    Document save(Document document);
 
-    Long save(AbstractEntity entity);
+    Directory save(Directory directory);
 
-    Long save(DocumentVersion version);
+    DocumentVersion save(DocumentVersion version, Long documentId);
 
     List<AbstractEntity> getEntitiesByDirectory(Directory directory);
+
+    Document findDocumentById(Long id);
+
+    DocumentVersion findVersionById(Long id);
+
+    Directory findDirectoryById(Long id);
+
+    void deleteById(String table, Long id);
+
+    List<DocumentVersion> findAllVersionByDocumentId(Long id);
+
 
 }

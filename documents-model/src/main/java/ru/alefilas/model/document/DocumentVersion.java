@@ -13,7 +13,6 @@ public class DocumentVersion {
     private String title;
     private String description;
     private List<Path> files;
-    private Document document;
     private ModerationStatus status;
 
     public void addFile(Path path) {

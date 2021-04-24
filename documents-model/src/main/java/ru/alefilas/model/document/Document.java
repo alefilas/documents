@@ -7,6 +7,7 @@ import ru.alefilas.model.moderation.ModerationStatus;
 import ru.alefilas.model.user.User;
 
 import java.nio.file.Path;
+import java.util.List;
 
 
 @EqualsAndHashCode(callSuper = true)
@@ -14,6 +15,7 @@ import java.nio.file.Path;
 public class Document extends AbstractEntity {
 
     private DocumentVersion currentVersion;
+    private List<DocumentVersion> versions;
     private DocumentPriority documentPriority;
     private User user;
     private String type;
