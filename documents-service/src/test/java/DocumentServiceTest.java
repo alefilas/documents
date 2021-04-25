@@ -12,6 +12,7 @@ import ru.alefilas.model.document.DocumentVersion;
 import ru.alefilas.model.moderation.ModerationStatus;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DocumentServiceTest {
@@ -35,7 +36,7 @@ public class DocumentServiceTest {
         document.setType("FAX");
         document.setCurrentVersion(version);
         document.setStatus(ModerationStatus.ON_MODERATION);
-        document.setVersions(List.of(version));
+        document.setVersions(new ArrayList<>());
 
         service.save(document);
 

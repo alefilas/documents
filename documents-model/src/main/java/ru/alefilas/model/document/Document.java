@@ -1,5 +1,6 @@
 package ru.alefilas.model.document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,7 +26,12 @@ public class Document extends AbstractEntity {
         currentVersion.addFile(path);
     }
 
+    public void addVersion(DocumentVersion version) {
+        versions.add(version);
+    }
+
     @Override
+    @JsonIgnore
     public boolean isDocument() {
         return true;
     }

@@ -33,8 +33,8 @@ public class DocumentsDaoJdbc implements DocumentsDao {
     private static final String SELECT_DOCUMENT_VERSION = "SELECT * FROM version WHERE id = ?";
     private static final String SELECT_FILES = "SELECT path FROM file WHERE version_id = ?";
     private static final String SELECT_ALL_VERSIONS_BY_DOCUMENT = "SELECT * FROM version WHERE document_id = ?";
-    private static final String SELECT_DOCUMENTS_BY_DIRECTORY = "SELECT * FROM entity e JOIN document d ON e.id = d.id WHERE directory_id = ?";
-    private static final String SELECT_DIRECTORIES_BY_DIRECTORY = "SELECT * FROM entity e JOIN directory d ON e.id = d.id WHERE directory_id = ?";
+    private static final String SELECT_DOCUMENTS_BY_DIRECTORY = "SELECT * FROM entity e JOIN document d ON e.id = d.id WHERE directory_id = ? ORDER BY creation_date";
+    private static final String SELECT_DIRECTORIES_BY_DIRECTORY = "SELECT * FROM entity e JOIN directory d ON e.id = d.id WHERE directory_id = ? ORDER BY creation_date";
 
 
     @Override

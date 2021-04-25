@@ -19,7 +19,9 @@ public class DocumentServiceImpls implements DocumentService {
 
     @Override
     public Document save(Document document) {
-        return dao.save(document);
+        Document doc = dao.save(document);
+        doc.addVersion(doc.getCurrentVersion());
+        return doc;
     }
 
     @Override

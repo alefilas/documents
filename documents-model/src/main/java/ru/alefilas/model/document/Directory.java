@@ -1,5 +1,6 @@
 package ru.alefilas.model.document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,6 +15,7 @@ public class Directory extends AbstractEntity {
 
 
     @Override
+    @JsonIgnore
     public boolean isDocument() {
         return false;
     }
