@@ -16,6 +16,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ru.alefilas.dto.DocumentDto;
 import ru.alefilas.model.document.Document;
 import ru.alefilas.model.document.DocumentPriority;
 import ru.alefilas.model.document.DocumentVersion;
@@ -54,8 +55,8 @@ public class DocumentServletTest {
 
     @Test
     public void documentTest() throws IOException, URISyntaxException {
-        Document doc = save();
-        Document docFromDb = load(doc.getId());
+        DocumentDto doc = save();
+        DocumentDto docFromDb = load(doc.getId());
 
         Assert.assertEquals(doc, docFromDb);
         Assert.assertEquals(doc.getCurrentVersion(), docFromDb.getCurrentVersion());
@@ -63,7 +64,7 @@ public class DocumentServletTest {
         delete(doc.getId());
     }
 
-    private Document save() throws IOException {
+    private DocumentDto save() throws IOException {
         HttpPost post = new HttpPost(server.getURI() + "document");
 
         DocumentVersion version = new DocumentVersion();
@@ -79,25 +80,24 @@ public class DocumentServletTest {
         user.setRole(Role.ADMIN);
         user.setEmail("123@mail.ru");
 
-        Document document = new Document();
-        document.setDocumentPriority(DocumentPriority.HIGH);
+        DocumentDto document = new DocumentDto();
+        document.setDocumentPriority(DocumentPriority.HIGH.toString());
         document.setType("FAX");
-        document.setUser(user);
+        document.setUser_id(1L);
         document.setCurrentVersion(version);
-        document.setStatus(ModerationStatus.ON_MODERATION);
-        document.setVersions(new ArrayList<>());
+        document.setStatus(ModerationStatus.ON_MODERATION.toString());
 
         StringEntity entityRoot = new StringEntity(mapper.writeValueAsString(document), ContentType.APPLICATION_JSON);
         post.setEntity(entityRoot);
         CloseableHttpResponse resp = httpClient.execute(post);
-        Document savedDocument = mapper.readValue(resp.getEntity().getContent(), Document.class);
+        DocumentDto savedDocument = mapper.readValue(resp.getEntity().getContent(), DocumentDto.class);
 
         Assert.assertEquals(200, resp.getStatusLine().getStatusCode());
 
         return savedDocument;
     }
 
-    private Document load(Long id) throws IOException, URISyntaxException {
+    private DocumentDto load(Long id) throws IOException, URISyntaxException {
         HttpGet get = new HttpGet(server.getURI() + "document");
         URI uri = new URIBuilder(get.getURI())
                 .addParameter("id", id.toString())
@@ -106,7 +106,7 @@ public class DocumentServletTest {
 
 
         CloseableHttpResponse respRoot = httpClient.execute(get);
-        return mapper.readValue(respRoot.getEntity().getContent(), Document.class);
+        return mapper.readValue(respRoot.getEntity().getContent(), DocumentDto.class);
     }
 
     private void delete(Long id) throws IOException, URISyntaxException {

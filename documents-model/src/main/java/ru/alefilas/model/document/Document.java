@@ -8,6 +8,7 @@ import ru.alefilas.model.moderation.ModerationStatus;
 import ru.alefilas.model.user.User;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,6 +22,10 @@ public class Document extends AbstractEntity {
     private User user;
     private String type;
     private ModerationStatus status;
+
+    public Document() {
+        versions = new ArrayList<>();
+    }
 
     public void addFile(Path path) {
         currentVersion.addFile(path);

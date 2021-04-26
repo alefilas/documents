@@ -1,6 +1,7 @@
 package ru.alefilas.servlets;
 
 import ru.alefilas.DocumentService;
+import ru.alefilas.dto.DocumentDto;
 import ru.alefilas.impls.DocumentServiceImpls;
 import ru.alefilas.impls.DocumentsDaoJdbc;
 import ru.alefilas.model.document.Document;
@@ -20,15 +21,15 @@ public class DocumentServlet extends HttpServlet {
         String id = req.getParameter("id");
 
         if (id != null) {
-            ServletUtils.writeJson(resp, service.findDocumentById(Long.parseLong(id)));
+            ServletUtils.writeJson(resp, service.getDocumentById(Long.parseLong(id)));
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Document document = ServletUtils.readJson(req, Document.class);
-        Document savedDocument = service.save(document);
+        DocumentDto document = ServletUtils.readJson(req, DocumentDto.class);
+        DocumentDto savedDocument = service.save(document);
         ServletUtils.writeJson(resp, savedDocument);
     }
 

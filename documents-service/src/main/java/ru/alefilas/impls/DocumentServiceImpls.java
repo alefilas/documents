@@ -2,6 +2,10 @@ package ru.alefilas.impls;
 
 import ru.alefilas.DocumentService;
 import ru.alefilas.DocumentsDao;
+import ru.alefilas.dto.DirectoryDto;
+import ru.alefilas.dto.DocumentDto;
+import ru.alefilas.mapper.DirectoryMapper;
+import ru.alefilas.mapper.DocumentMapper;
 import ru.alefilas.model.document.AbstractEntity;
 import ru.alefilas.model.document.Directory;
 import ru.alefilas.model.document.Document;
@@ -18,15 +22,16 @@ public class DocumentServiceImpls implements DocumentService {
     }
 
     @Override
-    public Document save(Document document) {
-        Document doc = dao.save(document);
+    public DocumentDto save(DocumentDto document) {
+        Document doc = dao.save(DocumentMapper.dtoToModel(document));
         doc.addVersion(doc.getCurrentVersion());
-        return doc;
+        return DocumentMapper.modelToDto(doc);
     }
 
     @Override
-    public Directory save(Directory directory) {
-        return dao.save(directory);
+    public DirectoryDto save(DirectoryDto directory) {
+        Directory dir = dao.save(DirectoryMapper.dtoToModel(directory));
+        return DirectoryMapper.modelToDto(dir);
     }
 
     @Override
@@ -40,18 +45,20 @@ public class DocumentServiceImpls implements DocumentService {
     }
 
     @Override
-    public Document findDocumentById(Long id) {
-        return dao.findDocumentById(id);
+    public DocumentDto getDocumentById(Long id) {
+        Document document = dao.findDocumentById(id);
+        return document == null ? null : DocumentMapper.modelToDto(document);
     }
 
     @Override
-    public DocumentVersion findVersionById(Long id) {
+    public DocumentVersion getVersionById(Long id) {
         return dao.findVersionById(id);
     }
 
     @Override
-    public Directory findDirectoryById(Long id) {
-        return dao.findDirectoryById(id);
+    public DirectoryDto getDirectoryById(Long id) {
+        Directory directory = dao.findDirectoryById(id);
+        return directory == null ? null: DirectoryMapper.modelToDto(directory);
     }
 
     @Override
@@ -60,7 +67,7 @@ public class DocumentServiceImpls implements DocumentService {
     }
 
     @Override
-    public List<DocumentVersion> findAllVersionByDocumentId(Long id) {
+    public List<DocumentVersion> getAllVersionByDocumentId(Long id) {
         return dao.findAllVersionByDocumentId(id);
     }
 }

@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import ru.alefilas.dto.DirectoryDto;
 import ru.alefilas.model.document.Directory;
 
 import java.io.IOException;
@@ -43,39 +44,37 @@ public class DirectoryServletTest {
 
     @Test
     public void directoryTest() throws IOException, URISyntaxException {
-        List<Directory> dirs = save();
+        List<DirectoryDto> dirs = save();
 
-        for (Directory dir: dirs) {
-            Directory dirFromDb = load(dir.getId());
+        for (DirectoryDto dir: dirs) {
+            DirectoryDto dirFromDb = load(dir.getId());
             Assert.assertEquals(dir, dirFromDb);
         }
 
-        for (Directory dir : dirs) {
+        for (DirectoryDto dir : dirs) {
             delete(dir.getId());
         }
     }
 
-    private List<Directory> save() throws IOException {
+    private List<DirectoryDto> save() throws IOException {
         HttpPost post = new HttpPost(server.getURI() + "directory");
 
-        Directory root = new Directory();
+        DirectoryDto root = new DirectoryDto();
         root.setTitle("root");
-
-        Directory dir = new Directory();
-        dir.setParentDirectory(root);
-        dir.setTitle("dir");
 
         StringEntity entityRoot = new StringEntity(mapper.writeValueAsString(root), ContentType.APPLICATION_JSON);
         post.setEntity(entityRoot);
         CloseableHttpResponse respRoot = httpClient.execute(post);
-        Directory savedRoot = mapper.readValue(respRoot.getEntity().getContent(), Directory.class);
+        DirectoryDto savedRoot = mapper.readValue(respRoot.getEntity().getContent(), DirectoryDto.class);
 
-        dir.setParentDirectory(savedRoot);
+        DirectoryDto dir = new DirectoryDto();
+        dir.setDirectory_id(savedRoot.getId());
+        dir.setTitle("dir");
 
         StringEntity entityDir = new StringEntity(mapper.writeValueAsString(dir), ContentType.APPLICATION_JSON);
         post.setEntity(entityDir);
         CloseableHttpResponse respDir = httpClient.execute(post);
-        Directory savedDir = mapper.readValue(respDir.getEntity().getContent(), Directory.class);
+        DirectoryDto savedDir = mapper.readValue(respDir.getEntity().getContent(), DirectoryDto.class);
 
         Assert.assertEquals(200, respRoot.getStatusLine().getStatusCode());
         Assert.assertEquals(200, respDir.getStatusLine().getStatusCode());
@@ -83,7 +82,7 @@ public class DirectoryServletTest {
         return List.of(savedRoot, savedDir);
     }
 
-    private Directory load(Long id) throws IOException, URISyntaxException {
+    private DirectoryDto load(Long id) throws IOException, URISyntaxException {
         HttpGet get = new HttpGet(server.getURI() + "directory");
         URI uri = new URIBuilder(get.getURI())
                 .addParameter("id", id.toString())
@@ -92,7 +91,7 @@ public class DirectoryServletTest {
 
 
         CloseableHttpResponse respRoot = httpClient.execute(get);
-        return mapper.readValue(respRoot.getEntity().getContent(), Directory.class);
+        return mapper.readValue(respRoot.getEntity().getContent(), DirectoryDto.class);
     }
 
     private void delete(Long id) throws IOException, URISyntaxException {

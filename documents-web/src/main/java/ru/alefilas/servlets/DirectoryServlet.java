@@ -1,6 +1,7 @@
 package ru.alefilas.servlets;
 
 import ru.alefilas.DocumentService;
+import ru.alefilas.dto.DirectoryDto;
 import ru.alefilas.impls.DocumentServiceImpls;
 import ru.alefilas.impls.DocumentsDaoJdbc;
 import ru.alefilas.model.document.Directory;
@@ -21,15 +22,15 @@ public class DirectoryServlet extends HttpServlet {
         String id = req.getParameter("id");
 
         if (id != null) {
-            ServletUtils.writeJson(resp, service.findDirectoryById(Long.parseLong(id)));
+            ServletUtils.writeJson(resp, service.getDirectoryById(Long.parseLong(id)));
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        Directory directory = ServletUtils.readJson(req, Directory.class);
-        Directory savedDirectory = service.save(directory);
+        DirectoryDto directory = ServletUtils.readJson(req, DirectoryDto.class);
+        DirectoryDto savedDirectory = service.save(directory);
         ServletUtils.writeJson(resp, savedDirectory);
     }
 

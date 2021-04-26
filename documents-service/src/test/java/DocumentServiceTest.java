@@ -2,9 +2,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import ru.alefilas.DocumentService;
 import ru.alefilas.UsersDao;
+import ru.alefilas.dto.DirectoryDto;
+import ru.alefilas.dto.DocumentDto;
 import ru.alefilas.impls.DocumentServiceImpls;
 import ru.alefilas.impls.DocumentsDaoJdbc;
 import ru.alefilas.impls.UsersDaoJdbc;
+import ru.alefilas.mapper.DirectoryMapper;
+import ru.alefilas.mapper.DocumentMapper;
 import ru.alefilas.model.document.Directory;
 import ru.alefilas.model.document.Document;
 import ru.alefilas.model.document.DocumentPriority;
@@ -30,53 +34,50 @@ public class DocumentServiceTest {
                 Path.of("C:\\Users\\safil\\Desktop\\javaCourse\\diagram2.png")));
         version.setStatus(ModerationStatus.ON_MODERATION);
 
-        Document document = new Document();
-        document.setDocumentPriority(DocumentPriority.HIGH);
-        document.setUser(usersDao.findById(1L));
+        DocumentDto document = new DocumentDto();
+        document.setDocumentPriority(DocumentPriority.HIGH.toString());
+        document.setUser_id(usersDao.findById(1L).getId());
         document.setType("FAX");
         document.setCurrentVersion(version);
-        document.setStatus(ModerationStatus.ON_MODERATION);
-        document.setVersions(new ArrayList<>());
+        document.setStatus(ModerationStatus.ON_MODERATION.toString());
 
-        service.save(document);
+        DocumentDto savedDocument = service.save(document);
 
-        Document documentFromDb = service.findDocumentById(document.getId());
+        DocumentDto documentFromDb = service.getDocumentById(savedDocument.getId());
 
-        Assert.assertEquals(document.getParentDirectory(), documentFromDb.getParentDirectory());
-        Assert.assertEquals(document, documentFromDb);
+        Assert.assertEquals(savedDocument, documentFromDb);
         Assert.assertEquals(version, documentFromDb.getCurrentVersion());
 
-        service.deleteById("entity", document.getId());
+        service.deleteById("entity", savedDocument.getId());
 
-        Assert.assertNull(service.findDocumentById(document.getId()));
-        Assert.assertNull(service.findVersionById(version.getId()));
+        Assert.assertNull(service.getDocumentById(savedDocument.getId()));
+        Assert.assertNull(service.getVersionById(version.getId()));
     }
 
     @Test
     public void saveDirectoryTest() {
 
-        Directory root = new Directory();
+        DirectoryDto root = new DirectoryDto();
         root.setTitle("root");
 
-        Directory dir = new Directory();
-        dir.setParentDirectory(root);
+        DirectoryDto savedRoot = service.save(root);
+
+        DirectoryDto dir = new DirectoryDto();
+        dir.setDirectory_id(savedRoot.getDirectory_id());
         dir.setTitle("dir");
 
-        dir.setParentDirectory(root);
+        DirectoryDto savedDir = service.save(dir);
 
-        service.save(root);
-        service.save(dir);
+        DirectoryDto rootFromDb = service.getDirectoryById(savedRoot.getId());
+        DirectoryDto dirFromDb = service.getDirectoryById(savedDir.getId());
 
-        Directory rootFromDb = service.findDirectoryById(root.getId());
-        Directory dirFromDb = service.findDirectoryById(dir.getId());
+        Assert.assertEquals(savedRoot, rootFromDb);
+        Assert.assertEquals(savedDir, dirFromDb);
 
-        Assert.assertEquals(root, rootFromDb);
-        Assert.assertEquals(dir, dirFromDb);
+        service.deleteById("entity", savedRoot.getId());
+        service.deleteById("entity", savedDir.getId());
 
-        service.deleteById("entity", root.getId());
-        service.deleteById("entity", dir.getId());
-
-        Assert.assertNull(service.findDocumentById(root.getId()));
-        Assert.assertNull(service.findVersionById(dir.getId()));
+        Assert.assertNull(service.getDirectoryById(savedRoot.getId()));
+        Assert.assertNull(service.getDirectoryById(savedDir.getId()));
     }
 }

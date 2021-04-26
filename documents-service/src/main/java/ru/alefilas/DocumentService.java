@@ -1,5 +1,7 @@
 package ru.alefilas;
 
+import ru.alefilas.dto.DirectoryDto;
+import ru.alefilas.dto.DocumentDto;
 import ru.alefilas.model.document.Directory;
 import ru.alefilas.model.document.Document;
 import ru.alefilas.model.document.AbstractEntity;
@@ -9,23 +11,23 @@ import java.util.List;
 
 public interface DocumentService {
 
-    Document save(Document document);
+    DocumentDto save(DocumentDto document);
 
-    Directory save(Directory directory);
+    DirectoryDto save(DirectoryDto directory);
 
     DocumentVersion save(DocumentVersion version, Long documentId);
 
     List<AbstractEntity> getEntitiesByDirectory(Directory directory);
 
-    Document findDocumentById(Long id);
+    DocumentDto getDocumentById(Long id);
 
-    DocumentVersion findVersionById(Long id);
+    DocumentVersion getVersionById(Long id);
 
-    Directory findDirectoryById(Long id);
+    DirectoryDto getDirectoryById(Long id);
 
     void deleteById(String table, Long id);
 
-    List<DocumentVersion> findAllVersionByDocumentId(Long id);
+    List<DocumentVersion> getAllVersionByDocumentId(Long id);
 
 
 }
