@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 
 public class DbConnector {
 
-    private static BasicDataSource ds = new BasicDataSource();
+    private static final BasicDataSource ds = new BasicDataSource();
 
     static {
         ResourceBundle rs = ResourceBundle.getBundle("liquibase");
@@ -16,7 +16,7 @@ public class DbConnector {
         ds.setUsername(rs.getString("username"));
         ds.setPassword(rs.getString("password"));
         ds.setMinIdle(1);
-        ds.setMaxIdle(7);
+        ds.setMaxIdle(15);
     }
 
     public static Connection getConnection() throws SQLException {

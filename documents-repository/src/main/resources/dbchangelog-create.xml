@@ -93,6 +93,7 @@
             <column name="moderation_status_id" type="integer">
                 <constraints references="moderation_status(id)" foreignKeyName="fk_version_status"/>
             </column>
+            <column name="document_id" type="integer"/>
         </createTable>
     </changeSet>
 
@@ -105,7 +106,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="version_id" type="integer">
-                <constraints references="version(id)" foreignKeyName="fk_file_version"/>
+                <constraints references="version(id)" foreignKeyName="fk_file_version" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>
@@ -119,7 +120,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="directory_id" type="integer">
-                <constraints references="entity(id)" foreignKeyName="fk_entity_entity" nullable="true"/>
+                <constraints references="entity(id)" foreignKeyName="fk_entity_entity" nullable="true" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>
@@ -127,7 +128,7 @@
     <changeSet id="add_directory_table" author="alefilas">
         <createTable tableName="directory">
             <column name="id" type="integer">
-                <constraints references="entity(id)" foreignKeyName="fk_directory_entity"/>
+                <constraints references="entity(id)" foreignKeyName="fk_directory_entity" deleteCascade="true"/>
             </column>
             <column name="title" type="varchar(32)">
                 <constraints nullable="false"/>
@@ -138,7 +139,7 @@
     <changeSet id="add_document_table" author="alefilas">
         <createTable tableName="document">
             <column name="id" type="integer">
-                <constraints references="entity(id)" foreignKeyName="fk_document_entity" unique="true"/>
+                <constraints references="entity(id)" foreignKeyName="fk_document_entity" unique="true" deleteCascade="true"/>
             </column>
             <column name="current_version_id" type="integer">
                 <constraints references="version(id)" foreignKeyName="fk_document_version"/>
@@ -188,11 +189,10 @@
     </changeSet>
 
     <changeSet id="alter_versions_table" author="alefilas">
-        <addColumn tableName="version">
-            <column name="document_id" type="integer">
-                <constraints references="document(id)" foreignKeyName="fk_version_document"/>
-            </column>
-        </addColumn>
+        <addForeignKeyConstraint baseTableName="version" baseColumnNames="document_id"
+                                 constraintName="fk_version_document"
+                                 referencedTableName="document" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
     </changeSet>
 
 </databaseChangeLog>
