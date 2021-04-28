@@ -1,14 +1,20 @@
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.alefilas.EnumService;
-import ru.alefilas.impls.EnumServiceImpl;
-import ru.alefilas.impls.EnumsDaoJdbc;
+import ru.alefilas.config.ServiceConfig;
 
 import java.util.List;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {ServiceConfig.class})
 public class EnumServiceTest {
 
-    private final EnumService service = new EnumServiceImpl(new EnumsDaoJdbc());
+    @Autowired
+    private EnumService service;
 
     @Test
     public void documentTypesTest() {

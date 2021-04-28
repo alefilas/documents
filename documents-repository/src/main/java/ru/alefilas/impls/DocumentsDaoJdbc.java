@@ -1,6 +1,8 @@
 package ru.alefilas.impls;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import ru.alefilas.DocumentsDao;
 import ru.alefilas.EnumsDao;
 import ru.alefilas.UsersDao;
@@ -16,10 +18,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@Repository
 public class DocumentsDaoJdbc implements DocumentsDao {
 
-    private final EnumsDao enumsDao = new EnumsDaoJdbc();
-    private final UsersDao usersDao = new UsersDaoJdbc();
+    @Autowired
+    private EnumsDao enumsDao;
+
+    @Autowired
+    private UsersDao usersDao;
 
     private static final String INSERT_ENTITY_IN_DIRECTORY = "INSERT INTO entity (creation_date, directory_id) VALUES (?, ?)";
     private static final String INSERT_ENTITY = "INSERT INTO entity (creation_date) VALUES (?)";

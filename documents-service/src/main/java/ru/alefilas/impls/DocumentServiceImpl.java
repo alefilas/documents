@@ -1,5 +1,7 @@
 package ru.alefilas.impls;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.alefilas.DocumentService;
 import ru.alefilas.DocumentsDao;
 import ru.alefilas.dto.DirectoryDto;
@@ -13,11 +15,13 @@ import ru.alefilas.model.document.DocumentVersion;
 
 import java.util.List;
 
-public class DocumentServiceImpls implements DocumentService {
+@Service
+public class DocumentServiceImpl implements DocumentService {
 
     private final DocumentsDao dao;
 
-    public DocumentServiceImpls(DocumentsDao dao) {
+    @Autowired
+    public DocumentServiceImpl(DocumentsDao dao) {
         this.dao = dao;
     }
 

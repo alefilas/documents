@@ -6,20 +6,20 @@
   <display-name>Archetype Created Web Application</display-name>
 
   <servlet>
-    <servlet-name>directory_servlet</servlet-name>
+    <servlet-name>directoryServlet</servlet-name>
     <servlet-class>ru.alefilas.servlets.DirectoryServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>document_servlet</servlet-name>
+    <servlet-name>documentServlet</servlet-name>
     <servlet-class>ru.alefilas.servlets.DocumentServlet</servlet-class>
   </servlet>
 
   <servlet-mapping>
-    <servlet-name>directory_servlet</servlet-name>
+    <servlet-name>directoryServlet</servlet-name>
     <url-pattern>/directory</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>document_servlet</servlet-name>
+    <servlet-name>documentServlet</servlet-name>
     <url-pattern>/document</url-pattern>
   </servlet-mapping>
 </web-app>

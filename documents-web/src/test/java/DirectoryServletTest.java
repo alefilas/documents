@@ -6,35 +6,41 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.eclipse.jetty.server.Server;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ru.alefilas.config.WebConfig;
 import ru.alefilas.dto.DirectoryDto;
-import ru.alefilas.model.document.Directory;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {WebConfig.class})
 public class DirectoryServletTest {
 
-    private final CloseableHttpClient httpClient = HttpClients.createDefault();
-    private final ObjectMapper mapper = new ObjectMapper();
-    private Server server;
+    @Autowired
+    private CloseableHttpClient httpClient;
 
-    {
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    }
+    @Autowired
+    private ObjectMapper mapper;
+
+    private Server server;
 
     @Before
     public void startServer() throws Exception {
         server = StartJetty.init("src/main/webapp");
         server.start();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }
 
     @After
@@ -44,6 +50,7 @@ public class DirectoryServletTest {
 
     @Test
     public void directoryTest() throws IOException, URISyntaxException {
+
         List<DirectoryDto> dirs = save();
 
         for (DirectoryDto dir: dirs) {

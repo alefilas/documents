@@ -1,16 +1,20 @@
 package ru.alefilas.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.alefilas.DocumentService;
-import ru.alefilas.UsersDao;
 import ru.alefilas.dto.DirectoryDto;
-import ru.alefilas.impls.DocumentServiceImpls;
-import ru.alefilas.impls.DocumentsDaoJdbc;
-import ru.alefilas.impls.UsersDaoJdbc;
 import ru.alefilas.model.document.Directory;
 
+@Component
 public class DirectoryMapper {
 
-    private static final DocumentService service = new DocumentServiceImpls(new DocumentsDaoJdbc());
+    private static DocumentService service;
+
+    @Autowired
+    public DirectoryMapper(DocumentService service) {
+        DirectoryMapper.service = service;
+    }
 
     public static Directory dtoToModel(DirectoryDto dto) {
 
