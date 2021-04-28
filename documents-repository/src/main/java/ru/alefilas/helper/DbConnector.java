@@ -1,16 +1,26 @@
 package ru.alefilas.helper;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+@Component
 public class DbConnector {
 
-    private static final BasicDataSource ds = new BasicDataSource();
+    private static BasicDataSource ds;
 
-    static {
+    @Autowired
+    public DbConnector(BasicDataSource ds) {
+        DbConnector.ds = ds;
+    }
+
+    @PostConstruct
+    public void init() {
         ResourceBundle rs = ResourceBundle.getBundle("liquibase");
         ds.setUrl(rs.getString("url"));
         ds.setUsername(rs.getString("username"));

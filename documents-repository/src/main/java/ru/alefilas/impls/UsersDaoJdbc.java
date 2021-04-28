@@ -1,6 +1,8 @@
 package ru.alefilas.impls;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import ru.alefilas.EnumsDao;
 import ru.alefilas.UsersDao;
 import ru.alefilas.helper.DbConnector;
@@ -13,9 +15,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Slf4j
+@Repository
 public class UsersDaoJdbc implements UsersDao {
 
-    private final EnumsDao enumsDao = new EnumsDaoJdbc();
+    @Autowired
+    private EnumsDao enumsDao;
 
     private static final String SELECT_USER = "SELECT * FROM users WHERE id = ?";
 

@@ -1,6 +1,7 @@
 package ru.alefilas.impls;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Repository;
 import ru.alefilas.EnumsDao;
 import ru.alefilas.helper.DbConnector;
 import ru.alefilas.model.document.DocumentPriority;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
+@Repository
 public class EnumsDaoJdbc implements EnumsDao {
 
     private static final String SELECT_ID = "SELECT id FROM $tableName WHERE $tableName = ?";

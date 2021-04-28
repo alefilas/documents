@@ -1,10 +1,9 @@
 package ru.alefilas.servlets;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.alefilas.DocumentService;
 import ru.alefilas.dto.DocumentDto;
-import ru.alefilas.impls.DocumentServiceImpls;
-import ru.alefilas.impls.DocumentsDaoJdbc;
-import ru.alefilas.model.document.Document;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,9 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Component
 public class DocumentServlet extends HttpServlet {
 
-    private final DocumentService service = new DocumentServiceImpls(new DocumentsDaoJdbc());
+    private static DocumentService service;
+
+    @Autowired
+    public void setService(DocumentService service) {
+        DocumentServlet.service = service;
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -41,5 +46,4 @@ public class DocumentServlet extends HttpServlet {
             service.deleteById("entity", Long.parseLong(id));
         }
     }
-
 }

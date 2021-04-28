@@ -1,10 +1,11 @@
 package ru.alefilas.servlets;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import ru.alefilas.DocumentService;
 import ru.alefilas.dto.DirectoryDto;
-import ru.alefilas.impls.DocumentServiceImpls;
-import ru.alefilas.impls.DocumentsDaoJdbc;
-import ru.alefilas.model.document.Directory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -12,10 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
+@Component
 public class DirectoryServlet extends HttpServlet {
 
-    private final DocumentService service = new DocumentServiceImpls(new DocumentsDaoJdbc());
+    private static DocumentService service;
+
+    @Autowired
+    public void setService(DocumentService service) {
+        DirectoryServlet.service = service;
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

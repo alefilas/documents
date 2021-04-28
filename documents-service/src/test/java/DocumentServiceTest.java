@@ -1,28 +1,30 @@
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.alefilas.DocumentService;
 import ru.alefilas.UsersDao;
+import ru.alefilas.config.ServiceConfig;
 import ru.alefilas.dto.DirectoryDto;
 import ru.alefilas.dto.DocumentDto;
-import ru.alefilas.impls.DocumentServiceImpls;
-import ru.alefilas.impls.DocumentsDaoJdbc;
-import ru.alefilas.impls.UsersDaoJdbc;
-import ru.alefilas.mapper.DirectoryMapper;
-import ru.alefilas.mapper.DocumentMapper;
-import ru.alefilas.model.document.Directory;
-import ru.alefilas.model.document.Document;
 import ru.alefilas.model.document.DocumentPriority;
 import ru.alefilas.model.document.DocumentVersion;
 import ru.alefilas.model.moderation.ModerationStatus;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {ServiceConfig.class})
 public class DocumentServiceTest {
 
-    private final DocumentService service = new DocumentServiceImpls(new DocumentsDaoJdbc());
-    private final UsersDao usersDao = new UsersDaoJdbc();
+    @Autowired
+    private DocumentService service;
+
+    @Autowired
+    private UsersDao usersDao ;
 
     @Test
     public void saveDocumentTest() {

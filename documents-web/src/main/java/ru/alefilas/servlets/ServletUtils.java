@@ -3,7 +3,10 @@ package ru.alefilas.servlets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -12,11 +15,18 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
+@Component
 public class ServletUtils {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static ObjectMapper mapper;
 
-    static {
+    @Autowired
+    public ServletUtils(ObjectMapper mapper) {
+        ServletUtils.mapper = mapper;
+    }
+
+    @PostConstruct
+    public void init() {
         mapper.registerModule(new JavaTimeModule());
         mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
     }

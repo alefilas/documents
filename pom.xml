@@ -26,7 +26,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
-    <junit.version>4.11</junit.version>
+    <junit.version>4.12</junit.version>
     <lombok.version>1.18.12</lombok.version>
     <slf4j-api.version>1.7.29</slf4j-api.version>
     <logback-classic.version>1.2.3</logback-classic.version>
@@ -36,6 +36,8 @@
     <jetty.version>10.0.1</jetty.version>
     <jackson.version>2.12.3</jackson.version>
     <httpclient.version>4.5.13</httpclient.version>
+    <spring.version>5.3.6</spring.version>
+    <javax.version>1.3.2</javax.version>
   </properties>
 
   <dependencyManagement>
@@ -124,8 +126,48 @@
         <artifactId>httpclient</artifactId>
         <version>${httpclient.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${spring.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <version>${spring.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.annotation</groupId>
+        <artifactId>javax.annotation-api</artifactId>
+        <version>${javax.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.16</version>
+        <configuration>
+          <reuseForks>false</reuseForks>
+          <forkCount>1</forkCount>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <distributionManagement>
     <repository>

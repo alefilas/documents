@@ -1,6 +1,4 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -9,15 +7,14 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.checkerframework.checker.units.qual.A;
 import org.eclipse.jetty.server.Server;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import ru.alefilas.config.WebConfig;
 import ru.alefilas.dto.DocumentDto;
-import ru.alefilas.model.document.Document;
 import ru.alefilas.model.document.DocumentPriority;
 import ru.alefilas.model.document.DocumentVersion;
 import ru.alefilas.model.moderation.ModerationStatus;
@@ -28,19 +25,19 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {WebConfig.class})
 public class DocumentServletTest {
 
-    private final CloseableHttpClient httpClient = HttpClients.createDefault();
-    private final ObjectMapper mapper = new ObjectMapper();
-    private Server server;
+    @Autowired
+    private CloseableHttpClient httpClient;
 
-    {
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    }
+    @Autowired
+    private ObjectMapper mapper;
+
+    private Server server;
 
     @Before
     public void startServer() throws Exception {
