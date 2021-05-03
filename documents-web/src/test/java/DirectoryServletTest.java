@@ -58,9 +58,7 @@ public class DirectoryServletTest {
             Assert.assertEquals(dir, dirFromDb);
         }
 
-        for (DirectoryDto dir : dirs) {
-            delete(dir.getId());
-        }
+        delete(dirs.get(0).getId());
     }
 
     private List<DirectoryDto> save() throws IOException {

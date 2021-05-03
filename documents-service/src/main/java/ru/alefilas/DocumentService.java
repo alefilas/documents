@@ -2,10 +2,7 @@ package ru.alefilas;
 
 import ru.alefilas.dto.DirectoryDto;
 import ru.alefilas.dto.DocumentDto;
-import ru.alefilas.model.document.Directory;
-import ru.alefilas.model.document.Document;
-import ru.alefilas.model.document.AbstractEntity;
-import ru.alefilas.model.document.DocumentVersion;
+import ru.alefilas.model.document.*;
 
 import java.util.List;
 
@@ -25,9 +22,13 @@ public interface DocumentService {
 
     DirectoryDto getDirectoryById(Long id);
 
-    void deleteById(String table, Long id);
+    void deleteById(Long id);
 
     List<DocumentVersion> getAllVersionByDocumentId(Long id);
+
+    DocumentType findDocumentTypeByName(String name);
+
+    List<DocumentType> findAllDocumentTypes();
 
 
 }

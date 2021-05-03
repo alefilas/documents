@@ -4,56 +4,12 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <changeSet id="add_role_table" author="alefilas">
-        <createTable tableName="role">
-            <column name="id" type="serial">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="role" type="VARCHAR(32)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-    <changeSet id="add_priority_table" author="alefilas">
-        <createTable tableName="priority">
-            <column name="id" type="serial">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="priority" type="VARCHAR(32)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-        </createTable>
-    </changeSet>
-
     <changeSet id="add_document_type_table" author="alefilas">
         <createTable tableName="document_type">
             <column name="id" type="serial">
                 <constraints primaryKey="true"/>
             </column>
             <column name="document_type" type="VARCHAR(32)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-    <changeSet id="add_status_table" author="alefilas">
-        <createTable tableName="moderation_status">
-            <column name="id" type="serial">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="moderation_status" type="VARCHAR(32)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-        </createTable>
-    </changeSet>
-
-    <changeSet id="add_permit_type_table" author="alefilas">
-        <createTable tableName="permit_type">
-            <column name="id" type="serial">
-                <constraints primaryKey="true"/>
-            </column>
-            <column name="permit_type" type="VARCHAR(32)">
                 <constraints nullable="false" unique="true"/>
             </column>
         </createTable>
@@ -73,8 +29,8 @@
             <column name="email" type="VARCHAR(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="role_id" type="integer">
-                <constraints references="role(id)" foreignKeyName="fk_user_role"/>
+            <column name="role" type="VARCHAR(32)">
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
@@ -90,8 +46,8 @@
             <column name="description" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
-            <column name="moderation_status_id" type="integer">
-                <constraints references="moderation_status(id)" foreignKeyName="fk_version_status"/>
+            <column name="status" type="VARCHAR(32)">
+                <constraints nullable="false"/>
             </column>
             <column name="document_id" type="integer"/>
         </createTable>
@@ -128,7 +84,7 @@
     <changeSet id="add_directory_table" author="alefilas">
         <createTable tableName="directory">
             <column name="id" type="integer">
-                <constraints references="entity(id)" foreignKeyName="fk_directory_entity" deleteCascade="true"/>
+                <constraints references="entity(id)" foreignKeyName="fk_directory_entity" deleteCascade="true" primaryKey="true"/>
             </column>
             <column name="title" type="varchar(32)">
                 <constraints nullable="false"/>
@@ -139,7 +95,7 @@
     <changeSet id="add_document_table" author="alefilas">
         <createTable tableName="document">
             <column name="id" type="integer">
-                <constraints references="entity(id)" foreignKeyName="fk_document_entity" unique="true" deleteCascade="true"/>
+                <constraints references="entity(id)" foreignKeyName="fk_document_entity" unique="true" deleteCascade="true" primaryKey="true"/>
             </column>
             <column name="current_version_id" type="integer">
                 <constraints references="version(id)" foreignKeyName="fk_document_version"/>
@@ -147,15 +103,15 @@
             <column name="document_type_id" type="integer">
                 <constraints references="document_type(id)" foreignKeyName="fk_document_type"/>
             </column>
-            <column name="priority_id" type="integer">
-                <constraints references="priority(id)" foreignKeyName="fk_document_priority"/>
+            <column name="priority" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(32)">
+                <constraints nullable="false"/>
             </column>
             <column name="user_id" type="integer">
                 <constraints references="users
                 (id)" foreignKeyName="fk_document_user"/>
-            </column>
-            <column name="status_id" type="integer">
-                <constraints references="moderation_status(id)" foreignKeyName="fk_document_status"/>
             </column>
         </createTable>
     </changeSet>
@@ -176,8 +132,8 @@
             <column name="id" type="serial">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="type_id" type="integer">
-                <constraints references="permit_type(id)" foreignKeyName="fk_permit_type"/>
+            <column name="permit_type" type="VARCHAR(32)">
+                <constraints nullable="false"/>
             </column>
             <column name="user_id" type="integer">
                 <constraints references="users(id)" foreignKeyName="fk_permit_user"/>

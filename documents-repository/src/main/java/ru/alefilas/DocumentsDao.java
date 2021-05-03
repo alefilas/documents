@@ -1,10 +1,7 @@
 package ru.alefilas;
 
 
-import ru.alefilas.model.document.AbstractEntity;
-import ru.alefilas.model.document.Directory;
-import ru.alefilas.model.document.Document;
-import ru.alefilas.model.document.DocumentVersion;
+import ru.alefilas.model.document.*;
 
 import java.util.List;
 
@@ -18,7 +15,7 @@ public interface DocumentsDao {
 
     List<AbstractEntity> findEntityByDirectory(Directory directory);
 
-    void deleteById(String table, Long id);
+    void deleteById(Long id);
 
     Document findDocumentById(Long id);
 
@@ -27,5 +24,9 @@ public interface DocumentsDao {
     Directory findDirectoryById(Long id);
 
     List<DocumentVersion> findAllVersionByDocumentId(Long id);
+
+    DocumentType findDocumentTypeByName(String name);
+
+    List<DocumentType> findAllDocumentTypes();
 
 }

@@ -45,7 +45,7 @@ public class DirectoryServlet extends HttpServlet {
         String id = req.getParameter("id");
 
         if (id != null) {
-            service.deleteById("entity", Long.parseLong(id));
+            service.deleteById(Long.parseLong(id));
         }
     }
 }

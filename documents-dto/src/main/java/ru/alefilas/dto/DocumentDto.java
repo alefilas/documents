@@ -4,6 +4,7 @@ import lombok.Data;
 import ru.alefilas.model.document.DocumentVersion;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Data
 public class DocumentDto {
@@ -16,6 +17,4 @@ public class DocumentDto {
     private Long user_id;
     private String type;
     private String status;
-
-
 }

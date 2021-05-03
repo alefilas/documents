@@ -24,7 +24,6 @@ import ru.alefilas.model.user.User;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -67,8 +66,8 @@ public class DocumentServletTest {
         DocumentVersion version = new DocumentVersion();
         version.setTitle("title");
         version.setDescription("desc");
-        version.setFiles(List.of(Path.of("C:\\Users\\safil\\Desktop\\javaCourse\\diagram.png"),
-                Path.of("C:\\Users\\safil\\Desktop\\javaCourse\\diagram2.png")));
+        version.setFiles(List.of("C:\\Users\\safil\\Desktop\\javaCourse\\diagram.png",
+                "C:\\Users\\safil\\Desktop\\javaCourse\\diagram2.png"));
         version.setStatus(ModerationStatus.ON_MODERATION);
 
         User user = new User();
