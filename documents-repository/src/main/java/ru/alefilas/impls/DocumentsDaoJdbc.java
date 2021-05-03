@@ -2,16 +2,15 @@ package ru.alefilas.impls;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import ru.alefilas.DocumentsDao;
-import ru.alefilas.EnumsDao;
 import ru.alefilas.UsersDao;
 import ru.alefilas.helper.DbConnector;
 import ru.alefilas.model.document.*;
 import ru.alefilas.model.moderation.ModerationStatus;
 import ru.alefilas.model.user.User;
 
-import java.nio.file.Path;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,15 +21,13 @@ import java.util.List;
 public class DocumentsDaoJdbc implements DocumentsDao {
 
     @Autowired
-    private EnumsDao enumsDao;
-
-    @Autowired
+    @Qualifier("usersDaoJdbc")
     private UsersDao usersDao;
 
     private static final String INSERT_ENTITY_IN_DIRECTORY = "INSERT INTO entity (creation_date, directory_id) VALUES (?, ?)";
     private static final String INSERT_ENTITY = "INSERT INTO entity (creation_date) VALUES (?)";
-    private static final String INSERT_DOCUMENT = "INSERT INTO document (id, document_type_id, priority_id, user_id, status_id) VALUES (?, ?, ?, ?, ?)";
-    private static final String INSERT_DOCUMENT_VERSION = "INSERT INTO version (title, description, moderation_status_id, document_id) VALUES (?, ?, ?, ?)";
+    private static final String INSERT_DOCUMENT = "INSERT INTO document (id, document_type_id, priority, status, user_id) VALUES (?, ?, ?, ?, ?)";
+    private static final String INSERT_DOCUMENT_VERSION = "INSERT INTO version (title, description, status, document_id) VALUES (?, ?, ?, ?)";
     private static final String INSERT_DIRECTORY = "INSERT INTO directory (id, title) VALUES (?, ?)";
     private static final String INSERT_FILES = "INSERT INTO file (path, version_id) VALUES (?, ?)";
     private static final String UPDATE_CURRENT_VERSION = "UPDATE document SET current_version_id = ?";
@@ -41,6 +38,9 @@ public class DocumentsDaoJdbc implements DocumentsDao {
     private static final String SELECT_ALL_VERSIONS_BY_DOCUMENT = "SELECT * FROM version WHERE document_id = ?";
     private static final String SELECT_DOCUMENTS_BY_DIRECTORY = "SELECT * FROM entity e JOIN document d ON e.id = d.id WHERE directory_id = ? ORDER BY creation_date";
     private static final String SELECT_DIRECTORIES_BY_DIRECTORY = "SELECT * FROM entity e JOIN directory d ON e.id = d.id WHERE directory_id = ? ORDER BY creation_date";
+    private static final String SELECT_TYPE_BY_ID = "SELECT * FROM document_type WHERE id = ?";
+    private static final String SELECT_TYPE_BY_NAME = "SELECT * FROM document_type WHERE document_type = ?";
+    private static final String SELECT_ALL_TYPES = "SELECT * FROM document_type";
 
 
     @Override
@@ -73,10 +73,10 @@ public class DocumentsDaoJdbc implements DocumentsDao {
     }
 
     @Override
-    public void deleteById(String table, Long id) {
+    public void deleteById(Long id) {
         try (Connection connection = DbConnector.getConnection()){
 
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM " + table + " WHERE id = ?");
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM entity WHERE id = ?");
             ps.setLong(1, id);
 
             ps.executeUpdate();
@@ -102,10 +102,10 @@ public class DocumentsDaoJdbc implements DocumentsDao {
                 findEntity(set, document);
 
                 DocumentVersion version = findVersionById(set.getLong("current_version_id"));
-                String type = enumsDao.findDocumentTypeById(set.getLong("document_type_id"));
-                DocumentPriority priority = enumsDao.findPriorityById(set.getLong("priority_id"));
+                DocumentType type = findDocumentTypeById(set.getLong("document_type_id"), connection);
+                DocumentPriority priority = DocumentPriority.valueOf(set.getString("priority"));
                 User user = usersDao.findById(set.getLong("user_id"));
-                ModerationStatus status = enumsDao.findModerationStatusById(set.getLong("status_id"));
+                ModerationStatus status = ModerationStatus.valueOf(set.getString("status"));
 
                 document.setId(id);
                 document.setCurrentVersion(version);
@@ -134,7 +134,7 @@ public class DocumentsDaoJdbc implements DocumentsDao {
             ResultSet set = ps.executeQuery();
             if (set.next()) {
 
-                ModerationStatus status = enumsDao.findModerationStatusById(set.getLong("moderation_status_id"));
+                ModerationStatus status = ModerationStatus.valueOf(set.getString("status"));
 
                 version = new DocumentVersion();
                 version.setId(id);
@@ -196,7 +196,7 @@ public class DocumentsDaoJdbc implements DocumentsDao {
 
                 DocumentVersion version = new DocumentVersion();
 
-                ModerationStatus status = enumsDao.findModerationStatusById(set.getLong("moderation_status_id"));
+                ModerationStatus status = ModerationStatus.valueOf(set.getString("status"));
 
                 version.setId(set.getLong("id"));
                 version.setTitle(set.getString("title"));
@@ -214,6 +214,56 @@ public class DocumentsDaoJdbc implements DocumentsDao {
     }
 
     @Override
+    public DocumentType findDocumentTypeByName(String name) {
+
+        DocumentType type = null;
+
+        try (Connection connection = DbConnector.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SELECT_TYPE_BY_NAME)) {
+
+            ps.setString(1, name);
+
+            ResultSet set = ps.executeQuery();
+
+
+            if (set.next()) {
+                type = new DocumentType();
+                type.setId(set.getLong("id"));
+                type.setType(set.getString("document_type"));
+            }
+
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        return type;
+    }
+
+    @Override
+    public List<DocumentType> findAllDocumentTypes() {
+        List<DocumentType> types = new ArrayList<>();
+
+        try (Connection connection = DbConnector.getConnection();
+             Statement statement = connection.createStatement()) {
+
+            ResultSet rs = statement.executeQuery(SELECT_ALL_TYPES);
+
+            while (rs.next()) {
+                DocumentType type = new DocumentType();
+                type.setId(rs.getLong("id"));
+                type.setType(rs.getString("document_type"));
+                types.add(type);
+            }
+
+            rs.close();
+        } catch (SQLException e) {
+            log.error(e.getMessage(), e);
+        }
+        return types;
+    }
+
+
+    @Override
     public Document save(Document document) {
 
         try (Connection connection = DbConnector.getConnection();
@@ -223,10 +273,10 @@ public class DocumentsDaoJdbc implements DocumentsDao {
             saveEntity(document, connection);
 
             ps.setLong(1, document.getId());
-            ps.setLong(2, enumsDao.findIdOfDocumentType(document.getType()));
-            ps.setLong(3, enumsDao.findIdOfPriority(document.getDocumentPriority()));
-            ps.setLong(4, document.getUser().getId());
-            ps.setLong(5, enumsDao.findIdOfModerationStatus(document.getStatus()));
+            ps.setLong(2, document.getType().getId());
+            ps.setString(3, document.getDocumentPriority().toString());
+            ps.setString(4, document.getStatus().toString());
+            ps.setLong(5, document.getUser().getId());
 
             ps.executeUpdate();
 
@@ -270,7 +320,7 @@ public class DocumentsDaoJdbc implements DocumentsDao {
 
             statement.setString(1, version.getTitle());
             statement.setString(2, version.getDescription());
-            statement.setLong(3, enumsDao.findIdOfModerationStatus(version.getStatus()));
+            statement.setString(3, version.getStatus().toString());
             statement.setLong(4, documentId);
 
             statement.executeUpdate();
@@ -290,9 +340,27 @@ public class DocumentsDaoJdbc implements DocumentsDao {
         return version;
     }
 
-    private List<Path> findFiles(Long id, Connection connection) throws SQLException {
+    private DocumentType findDocumentTypeById(Long id, Connection connection) throws SQLException {
 
-        List<Path> files = new ArrayList<>();
+        PreparedStatement ps = connection.prepareStatement(SELECT_TYPE_BY_ID);
+        ps.setLong(1, id);
+
+        ResultSet set = ps.executeQuery();
+
+        DocumentType type = null;
+
+        if (set.next()) {
+            type = new DocumentType();
+            type.setId(set.getLong("id"));
+            type.setType(set.getString("document_type"));
+        }
+
+        return type;
+    }
+
+    private List<String> findFiles(Long id, Connection connection) throws SQLException {
+
+        List<String> files = new ArrayList<>();
 
         PreparedStatement ps = connection.prepareStatement(SELECT_FILES);
         ps.setLong(1, id);
@@ -300,7 +368,7 @@ public class DocumentsDaoJdbc implements DocumentsDao {
         ResultSet set = ps.executeQuery();
 
         while (set.next()) {
-            files.add(Path.of(set.getString("path")));
+            files.add(set.getString("path"));
         }
         return files;
     }
@@ -313,12 +381,12 @@ public class DocumentsDaoJdbc implements DocumentsDao {
         entity.setParentDirectory(parentDirectory);
     }
 
-    private void saveFiles(List<Path> files, Long versionId, Connection connection) throws SQLException {
+    private void saveFiles(List<String> files, Long versionId, Connection connection) throws SQLException {
 
         PreparedStatement statement = connection.prepareStatement(INSERT_FILES);
 
-        for (Path path : files) {
-            statement.setString(1, path.toString());
+        for (String path : files) {
+            statement.setString(1, path);
             statement.setLong(2, versionId);
             statement.executeUpdate();
         }
@@ -328,16 +396,13 @@ public class DocumentsDaoJdbc implements DocumentsDao {
 
         PreparedStatement statement;
 
-        LocalDate date = LocalDate.now();
-        entity.setCreationDate(date);
-
         if (entity.getParentDirectory() != null) {
             statement = connection.prepareStatement(INSERT_ENTITY_IN_DIRECTORY, Statement.RETURN_GENERATED_KEYS);
-            statement.setDate(1, Date.valueOf(date));
+            statement.setDate(1, Date.valueOf(entity.getCreationDate()));
             statement.setLong(2, entity.getParentDirectory().getId());
         } else {
             statement = connection.prepareStatement(INSERT_ENTITY, Statement.RETURN_GENERATED_KEYS);
-            statement.setDate(1, Date.valueOf(date));
+            statement.setDate(1, Date.valueOf(entity.getCreationDate()));
         }
 
         statement.executeUpdate();

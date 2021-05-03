@@ -13,7 +13,6 @@ public class DirectoryDto {
     private String title;
 
     public void setTitle(String title) {
-        String s = "";
         this.title = title;
     }
 }

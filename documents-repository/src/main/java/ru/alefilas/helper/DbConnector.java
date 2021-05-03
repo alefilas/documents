@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -15,16 +16,12 @@ public class DbConnector {
     private static BasicDataSource ds;
 
     @Autowired
-    public DbConnector(BasicDataSource ds) {
-        DbConnector.ds = ds;
+    public DbConnector(DataSource ds) {
+        DbConnector.ds = (BasicDataSource) ds;
     }
 
     @PostConstruct
     public void init() {
-        ResourceBundle rs = ResourceBundle.getBundle("liquibase");
-        ds.setUrl(rs.getString("url"));
-        ds.setUsername(rs.getString("username"));
-        ds.setPassword(rs.getString("password"));
         ds.setMinIdle(1);
         ds.setMaxIdle(15);
     }

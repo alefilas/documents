@@ -1,6 +1,7 @@
 package ru.alefilas.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.alefilas.DocumentService;
 import ru.alefilas.UsersDao;
@@ -17,7 +18,7 @@ public class DocumentMapper {
     private static UsersDao usersDao;
 
     @Autowired
-    public DocumentMapper(DocumentService service, UsersDao usersDao) {
+    public DocumentMapper(DocumentService service, @Qualifier("usersDaoJpa") UsersDao usersDao) {
         DocumentMapper.service = service;
         DocumentMapper.usersDao = usersDao;
     }
@@ -31,7 +32,7 @@ public class DocumentMapper {
         document.setCurrentVersion(dto.getCurrentVersion());
         document.setDocumentPriority(DocumentPriority.valueOf(dto.getDocumentPriority()));
         document.setUser(usersDao.findById(dto.getUser_id()));
-        document.setType(dto.getType());
+        document.setType(service.findDocumentTypeByName("FAX"));
         document.setStatus(ModerationStatus.valueOf(dto.getStatus()));
 
         if(dto.getId() != null) {
@@ -54,8 +55,8 @@ public class DocumentMapper {
         dto.setCurrentVersion(document.getCurrentVersion());
         dto.setDocumentPriority(document.getDocumentPriority().toString());
         dto.setUser_id(document.getUser().getId());
-        dto.setType(document.getType());
-        dto.setStatus(dto.getStatus());
+        dto.setType(document.getType().getType());
+        dto.setStatus(document.getStatus().toString());
 
         if (document.getParentDirectory() != null) {
             dto.setDirectory_id(DirectoryMapper.dtoToModel(service.getDirectoryById(dto.getDirectory_id())).getId());

@@ -1,9 +1,7 @@
 package ru.alefilas.impls;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import ru.alefilas.EnumsDao;
 import ru.alefilas.UsersDao;
 import ru.alefilas.helper.DbConnector;
 import ru.alefilas.model.user.Role;
@@ -18,8 +16,6 @@ import java.sql.SQLException;
 @Repository
 public class UsersDaoJdbc implements UsersDao {
 
-    @Autowired
-    private EnumsDao enumsDao;
 
     private static final String SELECT_USER = "SELECT * FROM users WHERE id = ?";
 
@@ -40,9 +36,8 @@ public class UsersDaoJdbc implements UsersDao {
                 user.setId(set.getLong("id"));
                 user.setName(set.getString("name"));
                 user.setEmail(set.getString("email"));
+                user.setRole(Role.valueOf(set.getString("role")));
 
-                Role role = enumsDao.findRoleById(set.getLong("role_id"));
-                user.setRole(role);
             }
 
         } catch (SQLException e) {
