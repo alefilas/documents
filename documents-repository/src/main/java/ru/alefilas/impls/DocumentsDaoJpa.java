@@ -1,7 +1,6 @@
 package ru.alefilas.impls;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.alefilas.DocumentsDao;
 import ru.alefilas.model.document.*;
 
@@ -52,8 +51,14 @@ public class DocumentsDaoJpa implements DocumentsDao {
 
         List<AbstractEntity> list = new ArrayList<>();
 
-        List<Document> documents = entityManager.createQuery("from Document ", Document.class).getResultList();
-        List<Directory> directories = entityManager.createQuery("from Directory ", Directory.class).getResultList();
+        TypedQuery<Document> documentsQuery = entityManager.createQuery("from Document where parentDirectory = ?1", Document.class);
+        TypedQuery<Directory> directoriesQuery = entityManager.createQuery("from Directory where parentDirectory = ?1", Directory.class);
+
+        documentsQuery.setParameter(1, directory);
+        directoriesQuery.setParameter(1, directory);
+
+        List<Document> documents = documentsQuery.getResultList();
+        List<Directory> directories = directoriesQuery.getResultList();
 
         list.addAll(documents);
         list.addAll(directories);

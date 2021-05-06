@@ -32,7 +32,7 @@ public class DocumentMapper {
         document.setCurrentVersion(dto.getCurrentVersion());
         document.setDocumentPriority(DocumentPriority.valueOf(dto.getDocumentPriority()));
         document.setUser(usersDao.findById(dto.getUser_id()));
-        document.setType(service.findDocumentTypeByName("FAX"));
+        document.setType(service.getDocumentTypeByName("FAX"));
         document.setStatus(ModerationStatus.valueOf(dto.getStatus()));
 
         if(dto.getId() != null) {

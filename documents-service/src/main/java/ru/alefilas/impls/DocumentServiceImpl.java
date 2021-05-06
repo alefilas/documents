@@ -8,12 +8,15 @@ import ru.alefilas.DocumentService;
 import ru.alefilas.DocumentsDao;
 import ru.alefilas.dto.DirectoryDto;
 import ru.alefilas.dto.DocumentDto;
+import ru.alefilas.dto.EntityDto;
 import ru.alefilas.mapper.DirectoryMapper;
 import ru.alefilas.mapper.DocumentMapper;
+import ru.alefilas.mapper.EntityMapper;
 import ru.alefilas.model.document.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -55,8 +58,11 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     @Transactional
-    public List<AbstractEntity> getEntitiesByDirectory(Directory directory) {
-        return dao.findEntityByDirectory(directory);
+    public List<EntityDto> getEntitiesByDirectory(DirectoryDto directory) {
+        return dao.findEntityByDirectory(DirectoryMapper.dtoToModel(directory))
+                .stream()
+                .map(EntityMapper::fromModelToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -93,13 +99,13 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     @Transactional
-    public DocumentType findDocumentTypeByName(String name) {
+    public DocumentType getDocumentTypeByName(String name) {
         return dao.findDocumentTypeByName(name);
     }
 
     @Override
     @Transactional
-    public List<DocumentType> findAllDocumentTypes() {
+    public List<DocumentType> getAllDocumentTypes() {
         return dao.findAllDocumentTypes();
     }
 }
