@@ -3,6 +3,7 @@ package ru.alefilas.impls;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.alefilas.DocumentService;
 import ru.alefilas.DocumentsDao;
 import ru.alefilas.dto.DirectoryDto;
@@ -25,6 +26,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    @Transactional
     public DocumentDto save(DocumentDto document) {
 
         document.setCreationDate(LocalDate.now());
@@ -38,6 +40,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    @Transactional
     public DirectoryDto save(DirectoryDto directory) {
         directory.setCreationDate(LocalDate.now());
         Directory dir = dao.save(DirectoryMapper.dtoToModel(directory));
@@ -45,48 +48,57 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    @Transactional
     public DocumentVersion save(DocumentVersion version, Long documentId) {
         return dao.save(version, documentId);
     }
 
     @Override
+    @Transactional
     public List<AbstractEntity> getEntitiesByDirectory(Directory directory) {
         return dao.findEntityByDirectory(directory);
     }
 
     @Override
+    @Transactional
     public DocumentDto getDocumentById(Long id) {
         Document document = dao.findDocumentById(id);
         return document == null ? null : DocumentMapper.modelToDto(document);
     }
 
     @Override
+    @Transactional
     public DocumentVersion getVersionById(Long id) {
         return dao.findVersionById(id);
     }
 
     @Override
+    @Transactional
     public DirectoryDto getDirectoryById(Long id) {
         Directory directory = dao.findDirectoryById(id);
         return directory == null ? null: DirectoryMapper.modelToDto(directory);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         dao.deleteById(id);
     }
 
     @Override
+    @Transactional
     public List<DocumentVersion> getAllVersionByDocumentId(Long id) {
         return dao.findAllVersionByDocumentId(id);
     }
 
     @Override
+    @Transactional
     public DocumentType findDocumentTypeByName(String name) {
         return dao.findDocumentTypeByName(name);
     }
 
     @Override
+    @Transactional
     public List<DocumentType> findAllDocumentTypes() {
         return dao.findAllDocumentTypes();
     }
