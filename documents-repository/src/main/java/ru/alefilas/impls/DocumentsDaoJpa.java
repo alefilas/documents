@@ -1,57 +1,64 @@
 package ru.alefilas.impls;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Repository;
 import ru.alefilas.DocumentsDao;
 import ru.alefilas.model.document.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Repository
 public class DocumentsDaoJpa implements DocumentsDao {
 
-    @Autowired
-    private SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
-    @Transactional
     public Document save(Document document) {
-        Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(document);
+        if (document.getId() == null) {
+            entityManager.persist(document);
+        } else {
+            entityManager.merge(document);
+        }
         return document;
     }
 
     @Override
-    @Transactional
     public Directory save(Directory directory) {
-        Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(directory);
+        if (directory.getId() == null) {
+            entityManager.persist(directory);
+        } else {
+            entityManager.merge(directory);
+        }
         return directory;
     }
 
     @Override
-    @Transactional
     public DocumentVersion save(DocumentVersion version, Long documentId) {
-        Session session = sessionFactory.getCurrentSession();
-        session.saveOrUpdate(version);
+        if (version.getId() == null) {
+            entityManager.persist(version);
+        } else {
+            entityManager.merge(version);
+        }
         return version;
     }
 
     @Override
-    @Transactional
     public List<AbstractEntity> findEntityByDirectory(Directory directory) {
 
         List<AbstractEntity> list = new ArrayList<>();
 
-        Session session = sessionFactory.getCurrentSession();
+        TypedQuery<Document> documentsQuery = entityManager.createQuery("from Document where parentDirectory = ?1", Document.class);
+        TypedQuery<Directory> directoriesQuery = entityManager.createQuery("from Directory where parentDirectory = ?1", Directory.class);
 
-        List<Document> documents = session.createQuery("from Document ", Document.class).getResultList();
-        List<Directory> directories = session.createQuery("from Directory ", Directory.class).getResultList();
+        documentsQuery.setParameter(1, directory);
+        directoriesQuery.setParameter(1, directory);
+
+        List<Document> documents = documentsQuery.getResultList();
+        List<Directory> directories = directoriesQuery.getResultList();
 
         list.addAll(documents);
         list.addAll(directories);
@@ -60,55 +67,42 @@ public class DocumentsDaoJpa implements DocumentsDao {
     }
 
     @Override
-    @Transactional
     public void deleteById(Long id) {
-        AbstractEntity entity = sessionFactory.getCurrentSession().load(AbstractEntity.class, id);
-        sessionFactory.getCurrentSession().delete(entity);
+        AbstractEntity entity = entityManager.find(AbstractEntity.class, id);
+        entityManager.remove(entity);
     }
 
     @Override
-    @Transactional
     public Document findDocumentById(Long id) {
-        Session session = sessionFactory.getCurrentSession();
-        return session.get(Document.class, id);
+        return entityManager.find(Document.class, id);
     }
 
     @Override
-    @Transactional
     public DocumentVersion findVersionById(Long id) {
-        Session session = sessionFactory.getCurrentSession();
-        return session.get(DocumentVersion.class, id);
+        return entityManager.find(DocumentVersion.class, id);
     }
 
     @Override
-    @Transactional
     public Directory findDirectoryById(Long id) {
-        Session session = sessionFactory.getCurrentSession();
-        return session.get(Directory.class, id);
+        return entityManager.find(Directory.class, id);
     }
 
     @Override
-    @Transactional
     public List<DocumentVersion> findAllVersionByDocumentId(Long id) {
-        Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from DocumentVersion ", DocumentVersion.class).getResultList();
+        return entityManager.createQuery("from DocumentVersion ", DocumentVersion.class).getResultList();
     }
 
     @Override
-    @Transactional
     public DocumentType findDocumentTypeByName(String name) {
-        Session session = sessionFactory.getCurrentSession();
 
-        Query<DocumentType> query = session.createQuery("from DocumentType where type = ?1", DocumentType.class);
+        TypedQuery<DocumentType> query = entityManager.createQuery("from DocumentType where type = ?1", DocumentType.class);
         query.setParameter(1, name);
 
         return query.getSingleResult();
     }
 
     @Override
-    @Transactional
     public List<DocumentType> findAllDocumentTypes() {
-        Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from DocumentType ", DocumentType.class).getResultList();
+        return entityManager.createQuery("from DocumentType ", DocumentType.class).getResultList();
     }
 }

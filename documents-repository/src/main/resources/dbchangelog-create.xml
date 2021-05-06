@@ -75,8 +75,11 @@
             <column name="creation_date" type="date">
                 <constraints nullable="false"/>
             </column>
+<!--            <column name="directory_id" type="integer">-->
+<!--                <constraints references="entity(id)" foreignKeyName="fk_entity_entity" nullable="true" deleteCascade="true"/>-->
+<!--            </column>-->
             <column name="directory_id" type="integer">
-                <constraints references="entity(id)" foreignKeyName="fk_entity_entity" nullable="true" deleteCascade="true"/>
+                <constraints nullable="true"/>
             </column>
         </createTable>
     </changeSet>
@@ -148,6 +151,13 @@
         <addForeignKeyConstraint baseTableName="version" baseColumnNames="document_id"
                                  constraintName="fk_version_document"
                                  referencedTableName="document" referencedColumnNames="id"
+                                 onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="alter_entity_table" author="alefilas">
+        <addForeignKeyConstraint baseTableName="entity" baseColumnNames="directory_id"
+                                 constraintName="fk_entity_directory"
+                                 referencedTableName="directory" referencedColumnNames="id"
                                  onDelete="CASCADE"/>
     </changeSet>
 

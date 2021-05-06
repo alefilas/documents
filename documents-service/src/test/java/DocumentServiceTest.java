@@ -86,7 +86,7 @@ public class DocumentServiceTest {
 
     @Test
     public void documentTypesTest() {
-        List<DocumentType> listFromDao = service.findAllDocumentTypes();
+        List<DocumentType> listFromDao = service.getAllDocumentTypes();
         Assert.assertTrue(listFromDao.size() > 0);
     }
 }

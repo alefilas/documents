@@ -20,7 +20,7 @@ public abstract class AbstractEntity {
     @Column(name = "creation_date", nullable = false)
     protected LocalDate creationDate;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinColumn(name = "directory_id")
     protected Directory parentDirectory;
 

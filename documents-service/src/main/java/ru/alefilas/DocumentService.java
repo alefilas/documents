@@ -2,6 +2,7 @@ package ru.alefilas;
 
 import ru.alefilas.dto.DirectoryDto;
 import ru.alefilas.dto.DocumentDto;
+import ru.alefilas.dto.EntityDto;
 import ru.alefilas.model.document.*;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface DocumentService {
 
     DocumentVersion save(DocumentVersion version, Long documentId);
 
-    List<AbstractEntity> getEntitiesByDirectory(Directory directory);
+    List<EntityDto> getEntitiesByDirectory(DirectoryDto directory);
 
     DocumentDto getDocumentById(Long id);
 
@@ -26,9 +27,9 @@ public interface DocumentService {
 
     List<DocumentVersion> getAllVersionByDocumentId(Long id);
 
-    DocumentType findDocumentTypeByName(String name);
+    DocumentType getDocumentTypeByName(String name);
 
-    List<DocumentType> findAllDocumentTypes();
+    List<DocumentType> getAllDocumentTypes();
 
 
 }

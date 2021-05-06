@@ -3,16 +3,20 @@ package ru.alefilas.impls;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.alefilas.DocumentService;
 import ru.alefilas.DocumentsDao;
 import ru.alefilas.dto.DirectoryDto;
 import ru.alefilas.dto.DocumentDto;
+import ru.alefilas.dto.EntityDto;
 import ru.alefilas.mapper.DirectoryMapper;
 import ru.alefilas.mapper.DocumentMapper;
+import ru.alefilas.mapper.EntityMapper;
 import ru.alefilas.model.document.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
@@ -25,6 +29,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    @Transactional
     public DocumentDto save(DocumentDto document) {
 
         document.setCreationDate(LocalDate.now());
@@ -38,6 +43,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    @Transactional
     public DirectoryDto save(DirectoryDto directory) {
         directory.setCreationDate(LocalDate.now());
         Directory dir = dao.save(DirectoryMapper.dtoToModel(directory));
@@ -45,49 +51,61 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    @Transactional
     public DocumentVersion save(DocumentVersion version, Long documentId) {
         return dao.save(version, documentId);
     }
 
     @Override
-    public List<AbstractEntity> getEntitiesByDirectory(Directory directory) {
-        return dao.findEntityByDirectory(directory);
+    @Transactional
+    public List<EntityDto> getEntitiesByDirectory(DirectoryDto directory) {
+        return dao.findEntityByDirectory(DirectoryMapper.dtoToModel(directory))
+                .stream()
+                .map(EntityMapper::fromModelToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public DocumentDto getDocumentById(Long id) {
         Document document = dao.findDocumentById(id);
         return document == null ? null : DocumentMapper.modelToDto(document);
     }
 
     @Override
+    @Transactional
     public DocumentVersion getVersionById(Long id) {
         return dao.findVersionById(id);
     }
 
     @Override
+    @Transactional
     public DirectoryDto getDirectoryById(Long id) {
         Directory directory = dao.findDirectoryById(id);
         return directory == null ? null: DirectoryMapper.modelToDto(directory);
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         dao.deleteById(id);
     }
 
     @Override
+    @Transactional
     public List<DocumentVersion> getAllVersionByDocumentId(Long id) {
         return dao.findAllVersionByDocumentId(id);
     }
 
     @Override
-    public DocumentType findDocumentTypeByName(String name) {
+    @Transactional
+    public DocumentType getDocumentTypeByName(String name) {
         return dao.findDocumentTypeByName(name);
     }
 
     @Override
-    public List<DocumentType> findAllDocumentTypes() {
+    @Transactional
+    public List<DocumentType> getAllDocumentTypes() {
         return dao.findAllDocumentTypes();
     }
 }
