@@ -75,9 +75,6 @@
             <column name="creation_date" type="date">
                 <constraints nullable="false"/>
             </column>
-<!--            <column name="directory_id" type="integer">-->
-<!--                <constraints references="entity(id)" foreignKeyName="fk_entity_entity" nullable="true" deleteCascade="true"/>-->
-<!--            </column>-->
             <column name="directory_id" type="integer">
                 <constraints nullable="true"/>
             </column>
