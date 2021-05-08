@@ -11,12 +11,13 @@ import java.util.List;
 
 
 @RestController
+@RequestMapping(path = "/documents")
 public class DocumentController {
 
     @Autowired
     private DocumentService service;
 
-    @GetMapping("documents/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<DocumentDto> getDocumentById(@PathVariable Long id) {
         DocumentDto documentDto = service.getDocumentById(id);
         if (documentDto != null) {
@@ -26,19 +27,19 @@ public class DocumentController {
         }
     }
 
-    @GetMapping("documents/types")
+    @GetMapping("/types")
     public ResponseEntity<List<DocumentType>> getAllTypes() {
         List<DocumentType> types = service.getAllDocumentTypes();
         return ResponseEntity.ok(types);
     }
 
-    @PostMapping("documents")
+    @PostMapping("/")
     public ResponseEntity<DocumentDto> addDocument(@RequestBody DocumentDto documentDto) {
         DocumentDto savedDto = service.save(documentDto);
         return ResponseEntity.ok(savedDto);
     }
 
-    @DeleteMapping("documents/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteDocumentById(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();

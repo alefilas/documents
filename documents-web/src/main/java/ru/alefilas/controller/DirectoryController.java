@@ -10,12 +10,13 @@ import ru.alefilas.dto.EntityDto;
 import java.util.List;
 
 @RestController
+@RequestMapping(path = "/directories")
 public class DirectoryController {
 
     @Autowired
     private DocumentService service;
 
-    @GetMapping("directories/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<DirectoryDto> getDirectoryById(@PathVariable Long id) {
         DirectoryDto directoryDto = service.getDirectoryById(id);
         if (directoryDto != null) {
@@ -25,18 +26,18 @@ public class DirectoryController {
         }
     }
 
-    @GetMapping("directories/all/{id}")
+    @GetMapping("/all/{id}")
     public ResponseEntity<List<EntityDto>> getDirectoryData(@PathVariable Long id) {
         return ResponseEntity.ok(service.getEntitiesByDirectory(service.getDirectoryById(id)));
     }
 
-    @PostMapping("directories")
+    @PostMapping("/")
     public ResponseEntity<DirectoryDto> addDirectory(@RequestBody DirectoryDto directoryDto) {
         DirectoryDto savedDto = service.save(directoryDto);
         return ResponseEntity.ok(savedDto);
     }
 
-    @DeleteMapping("directories/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteDirectoryById(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.noContent().build();

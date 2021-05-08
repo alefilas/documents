@@ -1,17 +1,14 @@
-package ru.alefilas.impls;
+package ru.alefilas.repository.impls;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.alefilas.UsersDao;
+import ru.alefilas.repository.UsersDao;
 import ru.alefilas.model.user.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-@Component
+@Repository
 public class UsersDaoJpa implements UsersDao {
 
     @PersistenceContext

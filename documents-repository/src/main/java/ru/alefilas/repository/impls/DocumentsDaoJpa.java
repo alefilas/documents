@@ -1,7 +1,7 @@
-package ru.alefilas.impls;
+package ru.alefilas.repository.impls;
 
 import org.springframework.stereotype.Repository;
-import ru.alefilas.DocumentsDao;
+import ru.alefilas.repository.DocumentsDao;
 import ru.alefilas.model.document.*;
 
 import javax.persistence.EntityManager;
