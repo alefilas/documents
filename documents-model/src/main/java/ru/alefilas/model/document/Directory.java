@@ -19,7 +19,6 @@ public class Directory extends AbstractEntity {
     @Column(name = "title", nullable = false)
     private String title;
 
-
     @Override
     @JsonIgnore
     public boolean isDocument() {

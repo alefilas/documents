@@ -3,6 +3,7 @@ package ru.alefilas.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.alefilas.model.document.DocumentVersion;
 import ru.alefilas.service.DocumentService;
 import ru.alefilas.dto.DocumentDto;
 import ru.alefilas.model.document.DocumentType;
@@ -37,6 +38,12 @@ public class DocumentController {
     public ResponseEntity<DocumentDto> addDocument(@RequestBody DocumentDto documentDto) {
         DocumentDto savedDto = service.save(documentDto);
         return ResponseEntity.ok(savedDto);
+    }
+
+    @PostMapping("/{id}/versions")
+    public ResponseEntity<DocumentVersion> addVersion(@RequestBody DocumentVersion version, @PathVariable Long id) {
+        DocumentVersion savedVersion = service.save(version, id);
+        return ResponseEntity.ok(savedVersion);
     }
 
     @DeleteMapping("/{id}")

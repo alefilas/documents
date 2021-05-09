@@ -11,17 +11,9 @@ public interface DocumentService {
 
     DocumentDto save(DocumentDto document);
 
-    DirectoryDto save(DirectoryDto directory);
-
     DocumentVersion save(DocumentVersion version, Long documentId);
 
-    List<EntityDto> getEntitiesByDirectory(DirectoryDto directory);
-
     DocumentDto getDocumentById(Long id);
-
-    DocumentVersion getVersionById(Long id);
-
-    DirectoryDto getDirectoryById(Long id);
 
     void deleteById(Long id);
 

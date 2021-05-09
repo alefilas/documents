@@ -9,10 +9,7 @@ public class DirectoryDto {
 
     private Long id;
     private LocalDate creationDate;
-    private Long directory_id;
+    private Long directoryId;
     private String title;
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
 }

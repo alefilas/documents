@@ -26,7 +26,7 @@ public class Document extends AbstractEntity {
     @JoinColumn(name = "current_version_id")
     private DocumentVersion currentVersion;
 
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinColumn(name = "document_id")
     private List<DocumentVersion> versions;
 
@@ -38,7 +38,7 @@ public class Document extends AbstractEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "document_type_id")
     private DocumentType type;
 

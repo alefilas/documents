@@ -2,6 +2,7 @@ package ru.alefilas.service.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.alefilas.service.DirectoryService;
 import ru.alefilas.service.DocumentService;
 import ru.alefilas.dto.DirectoryDto;
 import ru.alefilas.model.document.Directory;
@@ -9,11 +10,11 @@ import ru.alefilas.model.document.Directory;
 @Component
 public class DirectoryMapper {
 
-    private static DocumentService service;
+    private static DirectoryService directoryService;
 
     @Autowired
-    public DirectoryMapper(DocumentService service) {
-        DirectoryMapper.service = service;
+    public DirectoryMapper(DirectoryService directoryService) {
+        DirectoryMapper.directoryService = directoryService;
     }
 
     public static Directory dtoToModel(DirectoryDto dto) {
@@ -24,8 +25,8 @@ public class DirectoryMapper {
         directory.setCreationDate(dto.getCreationDate());
         directory.setTitle(dto.getTitle());
 
-        if (dto.getDirectory_id() != null) {
-            directory.setParentDirectory(DirectoryMapper.dtoToModel(service.getDirectoryById(dto.getDirectory_id())));
+        if (dto.getDirectoryId() != null) {
+            directory.setParentDirectory(DirectoryMapper.dtoToModel(directoryService.getDirectoryById(dto.getDirectoryId())));
         }
 
         return directory;
@@ -40,7 +41,7 @@ public class DirectoryMapper {
         dto.setTitle(directory.getTitle());
 
         if (directory.getParentDirectory() != null) {
-            dto.setDirectory_id(directory.getParentDirectory().getId());
+            dto.setDirectoryId(directory.getParentDirectory().getId());
         }
 
         return dto;

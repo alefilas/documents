@@ -1,10 +1,10 @@
 package ru.alefilas.service.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import ru.alefilas.repository.UserRepository;
+import ru.alefilas.service.DirectoryService;
 import ru.alefilas.service.DocumentService;
-import ru.alefilas.repository.UsersDao;
 import ru.alefilas.dto.DocumentDto;
 import ru.alefilas.model.document.Document;
 import ru.alefilas.model.document.DocumentPriority;
@@ -13,14 +13,17 @@ import ru.alefilas.model.moderation.ModerationStatus;
 @Component
 public class DocumentMapper {
 
-    private static DocumentService service;
+    private static DocumentService documentService;
 
-    private static UsersDao usersDao;
+    private static DirectoryService directoryService;
+
+    private static UserRepository userRepository;
 
     @Autowired
-    public DocumentMapper(DocumentService service, @Qualifier("usersDaoJpa") UsersDao usersDao) {
-        DocumentMapper.service = service;
-        DocumentMapper.usersDao = usersDao;
+    public DocumentMapper(DocumentService documentService, DirectoryService directoryService, UserRepository userRepository) {
+        DocumentMapper.documentService = documentService;
+        DocumentMapper.directoryService = directoryService;
+        DocumentMapper.userRepository = userRepository;
     }
 
     public static Document dtoToModel(DocumentDto dto) {
@@ -31,16 +34,16 @@ public class DocumentMapper {
         document.setCreationDate(dto.getCreationDate());
         document.setCurrentVersion(dto.getCurrentVersion());
         document.setDocumentPriority(DocumentPriority.valueOf(dto.getDocumentPriority()));
-        document.setUser(usersDao.findById(dto.getUser_id()));
-        document.setType(service.getDocumentTypeByName("FAX"));
+        document.setUser(userRepository.findById(dto.getUserId()).orElseThrow());
+        document.setType(documentService.getDocumentTypeByName("FAX"));
         document.setStatus(ModerationStatus.valueOf(dto.getStatus()));
 
         if(dto.getId() != null) {
-            document.setVersions(service.getAllVersionByDocumentId(dto.getId()));
+            document.setVersions(documentService.getAllVersionByDocumentId(dto.getId()));
         }
 
-        if (dto.getDirectory_id() != null) {
-            document.setParentDirectory(DirectoryMapper.dtoToModel(service.getDirectoryById(dto.getDirectory_id())));
+        if (dto.getDirectoryId() != null) {
+            document.setParentDirectory(DirectoryMapper.dtoToModel(directoryService.getDirectoryById(dto.getDirectoryId())));
         }
 
         return document;
@@ -54,12 +57,12 @@ public class DocumentMapper {
         dto.setCreationDate(document.getCreationDate());
         dto.setCurrentVersion(document.getCurrentVersion());
         dto.setDocumentPriority(document.getDocumentPriority().toString());
-        dto.setUser_id(document.getUser().getId());
+        dto.setUserId(document.getUser().getId());
         dto.setType(document.getType().getType());
         dto.setStatus(document.getStatus().toString());
 
         if (document.getParentDirectory() != null) {
-            dto.setDirectory_id(DirectoryMapper.dtoToModel(service.getDirectoryById(dto.getDirectory_id())).getId());
+            dto.setDirectoryId(DirectoryMapper.dtoToModel(directoryService.getDirectoryById(dto.getDirectoryId())).getId());
         }
 
         return dto;
