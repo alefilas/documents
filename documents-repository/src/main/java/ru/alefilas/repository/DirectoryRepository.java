@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface DirectoryRepository extends JpaRepository<Directory, Long> {
 
-    @Query("SELECT ae FROM AbstractEntity  ae WHERE Directory = ?1")
-    List<AbstractEntity> findEntityByDirectory(Directory directory);
+    @Query("SELECT ae FROM AbstractEntity ae WHERE ae.parentDirectory.id = ?1")
+    List<AbstractEntity> findEntityByDirectory(Long id);
 
 }

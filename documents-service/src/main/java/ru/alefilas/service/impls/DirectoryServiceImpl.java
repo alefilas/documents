@@ -3,13 +3,17 @@ package ru.alefilas.service.impls;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.alefilas.dto.DirectoryDto;
-import ru.alefilas.dto.EntityDto;
+import ru.alefilas.dto.AbstractEntityDto;
+import ru.alefilas.dto.InputDirectoryDto;
+import ru.alefilas.dto.OutputDirectoryDto;
+import ru.alefilas.model.document.AbstractEntity;
 import ru.alefilas.model.document.Directory;
+import ru.alefilas.model.document.Document;
 import ru.alefilas.repository.DirectoryRepository;
 import ru.alefilas.service.DirectoryService;
+import ru.alefilas.service.exception.DirectoryNotFoundException;
 import ru.alefilas.service.mapper.DirectoryMapper;
-import ru.alefilas.service.mapper.EntityMapper;
+import ru.alefilas.service.mapper.DocumentMapper;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,31 +31,40 @@ public class DirectoryServiceImpl implements DirectoryService {
 
     @Override
     @Transactional
-    public DirectoryDto save(DirectoryDto directory) {
-        directory.setCreationDate(LocalDate.now());
-        Directory dir = directoryRepository.save(DirectoryMapper.dtoToModel(directory));
-        return DirectoryMapper.modelToDto(dir);
+    public OutputDirectoryDto save(InputDirectoryDto inputDir) {
+        Directory directory = DirectoryMapper.dtoToModel(inputDir);
+
+        if (directory.getId() == null) {
+            directory.setCreationDate(LocalDate.now());
+        }
+
+        directoryRepository.save(directory);
+
+        return DirectoryMapper.modelToDto(directory);
     }
 
     @Override
     @Transactional
-    public List<EntityDto> getEntitiesByDirectory(DirectoryDto directory) {
-        return directoryRepository.findEntityByDirectory(DirectoryMapper.dtoToModel(directory))
+    public List<AbstractEntityDto> getEntitiesByDirectoryId(Long id) {
+
+        return directoryRepository.findEntityByDirectory(id)
                 .stream()
-                .map(EntityMapper::fromModelToDto)
+                .map(entity -> entity.isDocument() ?
+                        DocumentMapper.modelToDto((Document) entity) :
+                        DirectoryMapper.modelToDto((Directory) entity))
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public DirectoryDto getDirectoryById(Long id) {
-        Directory directory = directoryRepository.findById(id).orElseThrow();
+    public OutputDirectoryDto getDirectoryById(Long id) {
+        Directory directory = directoryRepository.findById(id)
+                .orElseThrow(() -> new DirectoryNotFoundException(id));
         return DirectoryMapper.modelToDto(directory);
     }
 
     @Override
     public void deleteById(Long id) {
-        Directory directory = directoryRepository.findById(id).orElseThrow();
-        directoryRepository.delete(directory);
+        directoryRepository.deleteById(id);
     }
 }

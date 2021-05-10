@@ -1,19 +1,20 @@
 package ru.alefilas.service;
 
-import ru.alefilas.dto.DirectoryDto;
-import ru.alefilas.dto.DocumentDto;
-import ru.alefilas.dto.EntityDto;
+import ru.alefilas.dto.InputDocumentDto;
+import ru.alefilas.dto.InputDocumentVersionDto;
+import ru.alefilas.dto.OutputDocumentDto;
+import ru.alefilas.dto.OutputDocumentVersionDto;
 import ru.alefilas.model.document.*;
 
 import java.util.List;
 
 public interface DocumentService {
 
-    DocumentDto save(DocumentDto document);
+    OutputDocumentDto save(InputDocumentDto document);
 
-    DocumentVersion save(DocumentVersion version, Long documentId);
+    OutputDocumentVersionDto save(InputDocumentVersionDto version, Long documentId);
 
-    DocumentDto getDocumentById(Long id);
+    OutputDocumentDto getDocumentById(Long id);
 
     void deleteById(Long id);
 

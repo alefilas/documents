@@ -3,19 +3,27 @@ package ru.alefilas.service.impls;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.alefilas.dto.InputDocumentDto;
+import ru.alefilas.dto.InputDocumentVersionDto;
+import ru.alefilas.dto.OutputDocumentDto;
+import ru.alefilas.dto.OutputDocumentVersionDto;
+import ru.alefilas.model.document.Document;
+import ru.alefilas.model.document.DocumentType;
+import ru.alefilas.model.document.DocumentVersion;
+import ru.alefilas.model.moderation.ModerationStatus;
 import ru.alefilas.repository.DocumentRepository;
 import ru.alefilas.repository.DocumentTypeRepository;
 import ru.alefilas.service.DocumentService;
-import ru.alefilas.dto.DocumentDto;
+import ru.alefilas.service.exception.DocumentNotFoundException;
+import ru.alefilas.service.exception.DocumentTypeNotFoundException;
 import ru.alefilas.service.mapper.DocumentMapper;
-import ru.alefilas.model.document.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
-    
+
     private final DocumentRepository documentRepository;
 
     private final DocumentTypeRepository documentTypeRepository;
@@ -29,31 +37,51 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     @Transactional
-    public DocumentDto save(DocumentDto document) {
-
-        document.setCreationDate(LocalDate.now());
+    public OutputDocumentDto save(InputDocumentDto document) {
 
         Document savedDocument = DocumentMapper.dtoToModel(document);
-        savedDocument.addVersion(document.getCurrentVersion());
 
-        Document doc = documentRepository.save(savedDocument);
+        if (savedDocument.getId() == null) {
+            savedDocument.setCreationDate(LocalDate.now());
+            savedDocument.setStatus(ModerationStatus.ON_MODERATION);
+        } else {
+            Document docFromDb = findDocumentById(savedDocument.getId());
+            savedDocument.setStatus(docFromDb.getStatus());
+            savedDocument.setCreationDate(docFromDb.getCreationDate());
+        }
 
-        return DocumentMapper.modelToDto(doc);
+        DocumentVersion version = savedDocument.getCurrentVersion();
+        if (version.getId() == null) {
+            version.setStatus(ModerationStatus.ON_MODERATION);
+            savedDocument.addVersion(version);
+        }
+
+        documentRepository.save(savedDocument);
+
+        return DocumentMapper.modelToDto(savedDocument);
     }
 
     @Override
     @Transactional
-    public DocumentVersion save(DocumentVersion version, Long documentId) {
-        Document document = documentRepository.findById(documentId).orElseThrow();
-        document.addVersion(version);
-        return version;
+    public OutputDocumentVersionDto save(InputDocumentVersionDto version, Long documentId) {
+        DocumentVersion documentVersion = DocumentMapper.versionDtoToModel(version, documentId);
+        Document document = findDocumentById(documentId);
+        document.setCurrentVersion(documentVersion);
+
+        if (documentVersion.getId() == null) {
+            documentVersion.setStatus(ModerationStatus.ON_MODERATION);
+            document.addVersion(documentVersion);
+        }
+
+        documentRepository.save(document);
+
+        return DocumentMapper.modelToVersionDto(documentVersion);
     }
 
     @Override
     @Transactional
-    public DocumentDto getDocumentById(Long id) {
-        Document document = documentRepository.findById(id).orElseThrow();
-        return DocumentMapper.modelToDto(document);
+    public OutputDocumentDto getDocumentById(Long id) {
+        return DocumentMapper.modelToDto(findDocumentById(id));
     }
 
     @Override
@@ -65,19 +93,24 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     @Transactional
     public List<DocumentVersion> getAllVersionByDocumentId(Long id) {
-        Document document = documentRepository.findById(id).orElseThrow();
-        return document.getVersions();
+        return findDocumentById(id).getVersions();
     }
 
     @Override
     @Transactional
     public DocumentType getDocumentTypeByName(String name) {
-        return documentTypeRepository.findByType(name).orElseThrow();
+        return documentTypeRepository.findByType(name)
+                .orElseThrow(() -> new DocumentTypeNotFoundException(name));
     }
 
     @Override
     @Transactional
     public List<DocumentType> getAllDocumentTypes() {
         return (List<DocumentType>) documentTypeRepository.findAll();
+    }
+
+    private Document findDocumentById(Long id) {
+        return documentRepository.findById(id)
+                .orElseThrow(() -> new DocumentNotFoundException(id));
     }
 }

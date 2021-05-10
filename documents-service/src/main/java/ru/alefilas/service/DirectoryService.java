@@ -1,17 +1,18 @@
 package ru.alefilas.service;
 
-import ru.alefilas.dto.DirectoryDto;
-import ru.alefilas.dto.EntityDto;
+import ru.alefilas.dto.AbstractEntityDto;
+import ru.alefilas.dto.InputDirectoryDto;
+import ru.alefilas.dto.OutputDirectoryDto;
 
 import java.util.List;
 
 public interface DirectoryService {
 
-    DirectoryDto save(DirectoryDto directory);
+    OutputDirectoryDto save(InputDirectoryDto directory);
 
-    List<EntityDto> getEntitiesByDirectory(DirectoryDto directory);
+    List<AbstractEntityDto> getEntitiesByDirectoryId(Long id);
 
-    DirectoryDto getDirectoryById(Long id);
+    OutputDirectoryDto getDirectoryById(Long id);
 
     void deleteById(Long id);
 
