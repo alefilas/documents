@@ -28,10 +28,6 @@ public class DocumentVersion {
     @Column(name = "path")
     private List<String> files;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private ModerationStatus status;
-
     public void addFile(String path) {
         files.add(path);
     }
@@ -44,7 +40,6 @@ public class DocumentVersion {
         return Objects.equals(id, version.id) &&
                 Objects.equals(title, version.title) &&
                 Objects.equals(description, version.description) &&
-                Objects.deepEquals(files.toArray(), version.files.toArray()) &&
-                status == version.status;
+                Objects.deepEquals(files.toArray(), version.files.toArray());
     }
 }

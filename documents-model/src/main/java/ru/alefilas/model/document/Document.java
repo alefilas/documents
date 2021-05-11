@@ -30,7 +30,7 @@ public class Document extends AbstractEntity {
     @JoinColumn(name = "document_id")
     private List<DocumentVersion> versions;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated
     @Column(name = "priority")
     private DocumentPriority documentPriority;
 

@@ -1,9 +1,10 @@
 package ru.alefilas.service;
 
-import ru.alefilas.dto.InputDocumentDto;
-import ru.alefilas.dto.InputDocumentVersionDto;
-import ru.alefilas.dto.OutputDocumentDto;
-import ru.alefilas.dto.OutputDocumentVersionDto;
+import org.springframework.data.domain.Page;
+import ru.alefilas.dto.documents.InputDocumentDto;
+import ru.alefilas.dto.documents.InputDocumentVersionDto;
+import ru.alefilas.dto.documents.OutputDocumentDto;
+import ru.alefilas.dto.documents.OutputDocumentVersionDto;
 import ru.alefilas.model.document.*;
 
 import java.util.List;
@@ -23,6 +24,14 @@ public interface DocumentService {
     DocumentType getDocumentTypeByName(String name);
 
     List<DocumentType> getAllDocumentTypes();
+
+    DocumentType save(String type);
+
+    List<OutputDocumentVersionDto> getDocumentVersionsById(Long id);
+
+    Page<OutputDocumentDto> getAllDocuments(int page);
+
+    Page<OutputDocumentDto> getDocumentsByType(String type, int page);
 
 
 }

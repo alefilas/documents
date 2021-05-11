@@ -1,13 +1,9 @@
-package ru.alefilas.dto;
+package ru.alefilas.dto.documents;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import ru.alefilas.model.document.DocumentPriority;
-import ru.alefilas.model.document.DocumentVersion;
 import ru.alefilas.model.moderation.ModerationStatus;
-
-import java.time.LocalDate;
-import java.util.Objects;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

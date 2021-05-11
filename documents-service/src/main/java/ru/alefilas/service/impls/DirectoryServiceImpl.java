@@ -3,10 +3,9 @@ package ru.alefilas.service.impls;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.alefilas.dto.AbstractEntityDto;
-import ru.alefilas.dto.InputDirectoryDto;
-import ru.alefilas.dto.OutputDirectoryDto;
-import ru.alefilas.model.document.AbstractEntity;
+import ru.alefilas.dto.documents.AbstractEntityDto;
+import ru.alefilas.dto.documents.InputDirectoryDto;
+import ru.alefilas.dto.documents.OutputDirectoryDto;
 import ru.alefilas.model.document.Directory;
 import ru.alefilas.model.document.Document;
 import ru.alefilas.repository.DirectoryRepository;
@@ -22,12 +21,8 @@ import java.util.stream.Collectors;
 @Service
 public class DirectoryServiceImpl implements DirectoryService {
 
-    private final DirectoryRepository directoryRepository;
-
     @Autowired
-    public DirectoryServiceImpl(DirectoryRepository directoryRepository) {
-        this.directoryRepository = directoryRepository;
-    }
+    private DirectoryRepository directoryRepository;
 
     @Override
     @Transactional
@@ -65,6 +60,9 @@ public class DirectoryServiceImpl implements DirectoryService {
 
     @Override
     public void deleteById(Long id) {
+        if (!directoryRepository.existsById(id)) {
+            throw new DirectoryNotFoundException(id);
+        }
         directoryRepository.deleteById(id);
     }
 }

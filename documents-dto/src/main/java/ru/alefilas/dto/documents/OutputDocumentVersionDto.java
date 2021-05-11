@@ -1,16 +1,15 @@
-package ru.alefilas.dto;
+package ru.alefilas.dto.documents;
 
 import lombok.Data;
-import ru.alefilas.model.moderation.ModerationStatus;
 
 import java.util.List;
 
 @Data
 public class OutputDocumentVersionDto {
 
+    private Long id;
     private String title;
     private String description;
     private List<String> files;
-    private ModerationStatus status;
 
 }

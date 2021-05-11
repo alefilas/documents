@@ -1,4 +1,4 @@
-package ru.alefilas.dto;
+package ru.alefilas.dto.documents;
 
 import lombok.Data;
 

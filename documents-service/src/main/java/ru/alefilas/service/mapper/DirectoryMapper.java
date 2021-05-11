@@ -2,10 +2,9 @@ package ru.alefilas.service.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.alefilas.dto.InputDirectoryDto;
+import ru.alefilas.dto.documents.InputDirectoryDto;
 import ru.alefilas.repository.DirectoryRepository;
-import ru.alefilas.service.DirectoryService;
-import ru.alefilas.dto.OutputDirectoryDto;
+import ru.alefilas.dto.documents.OutputDirectoryDto;
 import ru.alefilas.model.document.Directory;
 import ru.alefilas.service.exception.DirectoryNotFoundException;
 

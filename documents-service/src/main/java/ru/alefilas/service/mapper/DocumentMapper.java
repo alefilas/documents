@@ -2,9 +2,9 @@ package ru.alefilas.service.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.alefilas.dto.InputDocumentDto;
-import ru.alefilas.dto.InputDocumentVersionDto;
-import ru.alefilas.dto.OutputDocumentVersionDto;
+import ru.alefilas.dto.documents.InputDocumentDto;
+import ru.alefilas.dto.documents.InputDocumentVersionDto;
+import ru.alefilas.dto.documents.OutputDocumentVersionDto;
 import ru.alefilas.model.document.*;
 import ru.alefilas.model.moderation.ModerationStatus;
 import ru.alefilas.model.user.User;
@@ -12,12 +12,13 @@ import ru.alefilas.repository.DirectoryRepository;
 import ru.alefilas.repository.DocumentRepository;
 import ru.alefilas.repository.DocumentTypeRepository;
 import ru.alefilas.repository.UserRepository;
-import ru.alefilas.dto.OutputDocumentDto;
+import ru.alefilas.dto.documents.OutputDocumentDto;
 import ru.alefilas.service.exception.DirectoryNotFoundException;
 import ru.alefilas.service.exception.DocumentNotFoundException;
 import ru.alefilas.service.exception.DocumentTypeNotFoundException;
 import ru.alefilas.service.exception.UserNotFoundException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -71,12 +72,15 @@ public class DocumentMapper {
 
         ModerationStatus status = ModerationStatus.ON_MODERATION;
 
+        LocalDate creationDate = null;
+
         if(id != null) {
             Document doc = documentRepository.findById(id)
                     .orElseThrow(() -> new DocumentNotFoundException(id));
 
             versions = doc.getVersions();
             status = doc.getStatus();
+            creationDate = doc.getCreationDate();
         }
 
         if (directoryId != null) {
@@ -92,6 +96,7 @@ public class DocumentMapper {
         document.setVersions(versions);
         document.setParentDirectory(parentDirectory);
         document.setStatus(status);
+        document.setCreationDate(creationDate);
 
         return document;
     }
@@ -146,10 +151,10 @@ public class DocumentMapper {
 
         OutputDocumentVersionDto dto = new OutputDocumentVersionDto();
 
+        dto.setId(version.getId());
         dto.setFiles(version.getFiles());
         dto.setDescription(version.getDescription());
         dto.setTitle(version.getTitle());
-        dto.setStatus(version.getStatus());
 
         return dto;
     }

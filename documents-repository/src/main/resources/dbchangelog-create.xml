@@ -46,9 +46,6 @@
             <column name="description" type="VARCHAR(128)">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="VARCHAR(32)">
-                <constraints nullable="false"/>
-            </column>
             <column name="document_id" type="integer"/>
         </createTable>
     </changeSet>
@@ -103,7 +100,7 @@
             <column name="document_type_id" type="integer">
                 <constraints references="document_type(id)" foreignKeyName="fk_document_type"/>
             </column>
-            <column name="priority" type="VARCHAR(32)">
+            <column name="priority" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
             <column name="status" type="VARCHAR(32)">
@@ -122,7 +119,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="document_id" type="integer">
-                <constraints references="document(id)" foreignKeyName="fk_ticket_document"/>
+                <constraints references="document(id)" foreignKeyName="fk_ticket_document" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>

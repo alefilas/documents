@@ -1,8 +1,8 @@
 package ru.alefilas.service;
 
-import ru.alefilas.dto.AbstractEntityDto;
-import ru.alefilas.dto.InputDirectoryDto;
-import ru.alefilas.dto.OutputDirectoryDto;
+import ru.alefilas.dto.documents.AbstractEntityDto;
+import ru.alefilas.dto.documents.InputDirectoryDto;
+import ru.alefilas.dto.documents.OutputDirectoryDto;
 
 import java.util.List;
 
