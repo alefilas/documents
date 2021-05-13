@@ -10,6 +10,17 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>documents-email</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>ru.alefilas</groupId>
+            <artifactId>documents-model</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+    </dependencies>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

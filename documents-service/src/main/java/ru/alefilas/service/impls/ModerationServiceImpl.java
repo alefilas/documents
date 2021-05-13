@@ -16,7 +16,7 @@ import ru.alefilas.service.exception.ModerationTicketNotFoundException;
 import ru.alefilas.service.mapper.ModerationMapper;
 
 @Service
-public class ModerationRepositoryImpl implements ModerationService {
+public class ModerationServiceImpl implements ModerationService {
 
     @Autowired
     private ModerationRepository moderationRepository;
@@ -26,12 +26,6 @@ public class ModerationRepositoryImpl implements ModerationService {
     public Page<ModerationTicketDto> getAllTickets(int page) {
         return moderationRepository.findAll(PageRequest.of(page, 10))
                 .map(ModerationMapper::modelToDto);
-    }
-
-    @Override
-    @Transactional
-    public ModerationTicketDto getFirstModerationTicket() {
-        return ModerationMapper.modelToDto(moderationRepository.findFirst());
     }
 
     @Override

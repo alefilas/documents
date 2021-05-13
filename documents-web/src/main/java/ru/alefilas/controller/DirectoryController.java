@@ -10,6 +10,7 @@ import ru.alefilas.service.DirectoryService;
 import ru.alefilas.dto.documents.OutputDirectoryDto;
 
 import java.util.List;
+import java.util.Properties;
 
 @RestController
 @RequestMapping(path = "/directories")
@@ -22,11 +23,10 @@ public class DirectoryController {
     public ResponseEntity<OutputDirectoryDto> getDirectoryById(@PathVariable Long id) {
         OutputDirectoryDto outputDirectoryDto = service.getDirectoryById(id);
         return ResponseEntity.ok(outputDirectoryDto);
-
     }
 
+
     @GetMapping("/{id}/all")
-    @Transactional
     public ResponseEntity<List<AbstractEntityDto>> getDirectoryData(@PathVariable Long id) {
         return ResponseEntity.ok(service.getEntitiesByDirectoryId(id));
     }

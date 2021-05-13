@@ -62,11 +62,6 @@ public class DocumentController {
         return ResponseEntity.ok(service.save(version, id));
     }
 
-    @PostMapping("/types")
-    public ResponseEntity<DocumentType> addDocumentType(@RequestBody String type) {
-        return ResponseEntity.ok(service.save(type));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteDocumentById(@PathVariable Long id) {
         service.deleteById(id);

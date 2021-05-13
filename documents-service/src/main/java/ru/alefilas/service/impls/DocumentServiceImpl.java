@@ -1,5 +1,6 @@
 package ru.alefilas.service.impls;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,10 @@ import ru.alefilas.model.document.DocumentType;
 import ru.alefilas.model.document.DocumentVersion;
 import ru.alefilas.model.moderation.ModerationStatus;
 import ru.alefilas.model.moderation.ModerationTicket;
+import ru.alefilas.model.user.User;
+import ru.alefilas.notification.NotificationService;
+import ru.alefilas.notification.impls.EmailSender;
+import ru.alefilas.notification.model.MessageType;
 import ru.alefilas.repository.DocumentRepository;
 import ru.alefilas.repository.DocumentTypeRepository;
 import ru.alefilas.repository.ModerationRepository;
@@ -23,11 +28,13 @@ import ru.alefilas.service.exception.DocumentNotFoundException;
 import ru.alefilas.service.exception.DocumentTypeNotFoundException;
 import ru.alefilas.service.mapper.DocumentMapper;
 
+import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class DocumentServiceImpl implements DocumentService {
 
     @Autowired
@@ -39,6 +46,9 @@ public class DocumentServiceImpl implements DocumentService {
     @Autowired
     private DocumentTypeRepository documentTypeRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
 
     @Override
     @Transactional
@@ -48,6 +58,8 @@ public class DocumentServiceImpl implements DocumentService {
 
         if (document.getId() == null) {
             document.setCreationDate(LocalDate.now());
+        } else {
+            sendNotification(document.getUser(), document.getId(), MessageType.CHANGE);
         }
 
         DocumentVersion version = document.getCurrentVersion();
@@ -75,6 +87,7 @@ public class DocumentServiceImpl implements DocumentService {
         if (documentVersion.getId() == null) {
             document.setStatus(ModerationStatus.ON_MODERATION);
             document.addVersion(documentVersion);
+            sendNotification(document.getUser(), documentId, MessageType.CHANGE);
         }
 
         DocumentVersion savedVersion = documentRepository.save(document).getCurrentVersion();
@@ -91,10 +104,12 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     @Transactional
     public void deleteById(Long id) {
-        if (!documentRepository.existsById(id)) {
-            throw new DocumentNotFoundException(id);
-        }
-        documentRepository.deleteById(id);
+
+        Document document = findDocumentById(id);
+
+        sendNotification(document.getUser(), document.getId(), MessageType.DELETE);
+
+        documentRepository.delete(document);
     }
 
     @Override
@@ -160,5 +175,11 @@ public class DocumentServiceImpl implements DocumentService {
         }
     }
 
-
+    private void sendNotification(User user, Long id, MessageType type) {
+        try {
+            notificationService.send(user, id, type);
+        } catch (MessagingException e) {
+            log.error("Can't sent email", e);
+        }
+    }
 }

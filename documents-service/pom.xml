@@ -19,11 +19,6 @@
     <dependencies>
         <dependency>
             <groupId>ru.alefilas</groupId>
-            <artifactId>documents-model</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>ru.alefilas</groupId>
             <artifactId>documents-repository</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -33,9 +28,13 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>ru.alefilas</groupId>
+            <artifactId>documents-email</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
     </dependencies>
-
 </project>
