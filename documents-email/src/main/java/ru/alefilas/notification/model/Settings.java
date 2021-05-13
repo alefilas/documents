@@ -1,2 +1,4 @@
-package ru.alefilas.notification.model;public class Settings {
+package ru.alefilas.notification.model;
+
+public interface Settings {
 }
