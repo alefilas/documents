@@ -2,7 +2,7 @@ package ru.alefilas.model.user;
 
 public enum Role {
 
-    USER,
-    ADMIN
+    ROLE_USER,
+    ROLE_ADMIN
 
 }

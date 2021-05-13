@@ -18,7 +18,6 @@ import ru.alefilas.model.moderation.ModerationStatus;
 import ru.alefilas.model.moderation.ModerationTicket;
 import ru.alefilas.model.user.User;
 import ru.alefilas.notification.NotificationService;
-import ru.alefilas.notification.impls.EmailSender;
 import ru.alefilas.notification.model.MessageType;
 import ru.alefilas.repository.DocumentRepository;
 import ru.alefilas.repository.DocumentTypeRepository;

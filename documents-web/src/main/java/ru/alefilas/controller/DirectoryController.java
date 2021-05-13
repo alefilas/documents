@@ -2,15 +2,13 @@ package ru.alefilas.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import ru.alefilas.dto.documents.AbstractEntityDto;
 import ru.alefilas.dto.documents.InputDirectoryDto;
-import ru.alefilas.service.DirectoryService;
 import ru.alefilas.dto.documents.OutputDirectoryDto;
+import ru.alefilas.service.DirectoryService;
 
 import java.util.List;
-import java.util.Properties;
 
 @RestController
 @RequestMapping(path = "/directories")
