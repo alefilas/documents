@@ -20,10 +20,10 @@
             <column name="id" type="serial">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="name" type="VARCHAR(20)">
+            <column name="username" type="VARCHAR(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="password" type="VARCHAR(15)">
+            <column name="password" type="VARCHAR(64)">
                 <constraints nullable="false"/>
             </column>
             <column name="email" type="VARCHAR(50)">
@@ -44,9 +44,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="VARCHAR(128)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="status" type="VARCHAR(32)">
                 <constraints nullable="false"/>
             </column>
             <column name="document_id" type="integer"/>
@@ -75,9 +72,6 @@
             <column name="creation_date" type="date">
                 <constraints nullable="false"/>
             </column>
-<!--            <column name="directory_id" type="integer">-->
-<!--                <constraints references="entity(id)" foreignKeyName="fk_entity_entity" nullable="true" deleteCascade="true"/>-->
-<!--            </column>-->
             <column name="directory_id" type="integer">
                 <constraints nullable="true"/>
             </column>
@@ -106,7 +100,7 @@
             <column name="document_type_id" type="integer">
                 <constraints references="document_type(id)" foreignKeyName="fk_document_type"/>
             </column>
-            <column name="priority" type="VARCHAR(32)">
+            <column name="priority" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
             <column name="status" type="VARCHAR(32)">
@@ -125,7 +119,7 @@
                 <constraints primaryKey="true"/>
             </column>
             <column name="document_id" type="integer">
-                <constraints references="document(id)" foreignKeyName="fk_ticket_document"/>
+                <constraints references="document(id)" foreignKeyName="fk_ticket_document" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>
@@ -139,10 +133,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="user_id" type="integer">
-                <constraints references="users(id)" foreignKeyName="fk_permit_user"/>
+                <constraints references="users(id)" foreignKeyName="fk_permit_user" deleteCascade="true"/>
             </column>
-            <column name="document_id" type="integer">
-                <constraints references="document(id)" foreignKeyName="fk_permit_document"/>
+            <column name="directory_id" type="integer">
+                <constraints references="directory(id)" foreignKeyName="fk_permit_directory" deleteCascade="true"/>
             </column>
         </createTable>
     </changeSet>

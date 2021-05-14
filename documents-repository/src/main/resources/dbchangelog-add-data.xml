@@ -23,24 +23,24 @@
     <changeSet id="add_user" author="alefilas">
 
         <insert tableName="users">
-            <column name="name" value="Alex"/>
-            <column name="password" value="123"/>
-            <column name="email" value="123@mail.ru"/>
-            <column name="role" value="ADMIN"/>
+            <column name="username" value="Alex"/>
+            <column name="password" value="$2a$10$uQmJ0ll4p9ONWfKgpIrEE.sWOjtc2ijSeorkFQZSh9OqK7gZbgOKa"/>
+            <column name="email" value="safil96@mail.ru"/>
+            <column name="role" value="ROLE_ADMIN"/>
         </insert>
 
         <insert tableName="users">
-            <column name="name" value="Ivan"/>
-            <column name="password" value="ivan"/>
+            <column name="username" value="Ivan"/>
+            <column name="password" value="$2a$10$Y1fSJ6hiZ5iXGQOL027jZOn3odZXVFDocVLeL4PtW9pfe4y/tn2R6"/>
             <column name="email" value="ivan@mail.ru"/>
-            <column name="role" value="USER"/>
+            <column name="role" value="ROLE_USER"/>
         </insert>
 
         <insert tableName="users">
-            <column name="name" value="Petr"/>
-            <column name="password" value="petr"/>
+            <column name="username" value="Petr"/>
+            <column name="password" value="$2a$10$3VlbJkkVZ0C1clpdu9SbEutDNWJORrDYR2D0LQHPOpK2CNWQQoDGW"/>
             <column name="email" value="petr@mail.ru"/>
-            <column name="role" value="USER"/>
+            <column name="role" value="ROLE_MODERATOR"/>
         </insert>
 
     </changeSet>

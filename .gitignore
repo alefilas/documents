@@ -1,9 +1,9 @@
 .idea
 
-/documents-contoller/target/
 /documents-email/target/
 /documents-service/target/
 /documents-repository/target/
 /documents-model/target/
 /documents-web/target/
 /documents-dto/target/
+/documents-app/target/
