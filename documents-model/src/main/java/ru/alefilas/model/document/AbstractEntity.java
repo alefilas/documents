@@ -21,7 +21,7 @@ public abstract class AbstractEntity {
     protected LocalDate creationDate;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH, CascadeType.DETACH},
-    fetch = FetchType.LAZY)
+    fetch = FetchType.EAGER)
     @JoinColumn(name = "directory_id")
     protected Directory parentDirectory;
 

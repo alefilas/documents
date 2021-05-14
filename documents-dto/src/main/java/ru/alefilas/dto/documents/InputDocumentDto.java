@@ -10,7 +10,6 @@ public class InputDocumentDto {
     private Long directoryId;
     private InputDocumentVersionDto currentVersion;
     private DocumentPriority documentPriority;
-    private String username;
     private String type;
 
 }

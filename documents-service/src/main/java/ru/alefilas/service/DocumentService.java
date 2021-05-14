@@ -19,8 +19,6 @@ public interface DocumentService {
 
     void deleteById(Long id);
 
-    List<DocumentVersion> getAllVersionByDocumentId(Long id);
-
     DocumentType getDocumentTypeByName(String name);
 
     List<DocumentType> getAllDocumentTypes();

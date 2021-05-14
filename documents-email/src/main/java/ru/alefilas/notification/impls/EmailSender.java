@@ -37,7 +37,7 @@ public class EmailSender implements NotificationService {
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
         msg.setSubject(type.getSubject());
         msg.setText(
-                String.format(type.getText(), user.getName(), id)
+                String.format(type.getText(), user.getUsername(), id)
         );
 
         Transport.send(msg);

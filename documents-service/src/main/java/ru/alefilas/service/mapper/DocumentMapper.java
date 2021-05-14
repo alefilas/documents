@@ -13,6 +13,7 @@ import ru.alefilas.repository.DocumentRepository;
 import ru.alefilas.repository.DocumentTypeRepository;
 import ru.alefilas.repository.UserRepository;
 import ru.alefilas.dto.documents.OutputDocumentDto;
+import ru.alefilas.service.access.AccessHelper;
 import ru.alefilas.service.exception.DirectoryNotFoundException;
 import ru.alefilas.service.exception.DocumentNotFoundException;
 import ru.alefilas.service.exception.DocumentTypeNotFoundException;
@@ -55,11 +56,6 @@ public class DocumentMapper {
 
         DocumentPriority priority = dto.getDocumentPriority();
 
-        User user = userRepository.findByName(
-                dto.getUsername()).orElseThrow(
-                        () -> new UserNotFoundException(dto.getUsername())
-        );
-
         DocumentType type = typeRepository.findByType(
                 dto.getType().toUpperCase())
                 .orElseThrow(
@@ -74,6 +70,8 @@ public class DocumentMapper {
 
         LocalDate creationDate = null;
 
+        User user = null;
+
         if(id != null) {
             Document doc = documentRepository.findById(id)
                     .orElseThrow(() -> new DocumentNotFoundException(id));
@@ -81,6 +79,7 @@ public class DocumentMapper {
             versions = doc.getVersions();
             status = doc.getStatus();
             creationDate = doc.getCreationDate();
+            user = doc.getUser();
         }
 
         if (directoryId != null) {
@@ -108,7 +107,7 @@ public class DocumentMapper {
         dto.setId(document.getId());
         dto.setCreationDate(document.getCreationDate());
         dto.setDocumentPriority(document.getDocumentPriority());
-        dto.setUsername(document.getUser().getName());
+        dto.setUsername(document.getUser().getUsername());
         dto.setType(document.getType().getType());
         dto.setStatus(document.getStatus());
 

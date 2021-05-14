@@ -2,27 +2,33 @@ package ru.alefilas.service.impls;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
+import org.springframework.data.domain.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.alefilas.dto.documents.InputDocumentDto;
 import ru.alefilas.dto.documents.InputDocumentVersionDto;
 import ru.alefilas.dto.documents.OutputDocumentDto;
 import ru.alefilas.dto.documents.OutputDocumentVersionDto;
+import ru.alefilas.model.document.Directory;
 import ru.alefilas.model.document.Document;
 import ru.alefilas.model.document.DocumentType;
 import ru.alefilas.model.document.DocumentVersion;
 import ru.alefilas.model.moderation.ModerationStatus;
 import ru.alefilas.model.moderation.ModerationTicket;
+import ru.alefilas.model.permit.PermitType;
 import ru.alefilas.model.user.User;
 import ru.alefilas.notification.NotificationService;
 import ru.alefilas.notification.model.MessageType;
 import ru.alefilas.repository.DocumentRepository;
 import ru.alefilas.repository.DocumentTypeRepository;
 import ru.alefilas.repository.ModerationRepository;
+import ru.alefilas.repository.UserRepository;
 import ru.alefilas.service.DocumentService;
+import ru.alefilas.service.access.AccessHelper;
+import ru.alefilas.service.exception.AccessDeniedException;
 import ru.alefilas.service.exception.DocumentNotFoundException;
 import ru.alefilas.service.exception.DocumentTypeNotFoundException;
 import ru.alefilas.service.mapper.DocumentMapper;
@@ -48,6 +54,9 @@ public class DocumentServiceImpl implements DocumentService {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Override
     @Transactional
@@ -55,8 +64,13 @@ public class DocumentServiceImpl implements DocumentService {
 
         Document document = DocumentMapper.dtoToModel(dto);
 
+        AccessHelper.checkAccess(document.getParentDirectory(), PermitType.WRITE);
+
         if (document.getId() == null) {
             document.setCreationDate(LocalDate.now());
+
+            User user = userRepository.findByUsername(AccessHelper.getCurrentUser()).orElseThrow();
+            document.setUser(user);
         } else {
             sendNotification(document.getUser(), document.getId(), MessageType.CHANGE);
         }
@@ -81,6 +95,9 @@ public class DocumentServiceImpl implements DocumentService {
     public OutputDocumentVersionDto save(InputDocumentVersionDto version, Long documentId) {
         DocumentVersion documentVersion = DocumentMapper.versionDtoToModel(version, documentId);
         Document document = findDocumentById(documentId);
+
+        AccessHelper.checkAccess(document.getParentDirectory(), PermitType.WRITE);
+
         document.setCurrentVersion(documentVersion);
 
         if (documentVersion.getId() == null) {
@@ -97,7 +114,9 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     @Transactional
     public OutputDocumentDto getDocumentById(Long id) {
-        return DocumentMapper.modelToDto(findDocumentById(id));
+        Document document = findDocumentById(id);
+        AccessHelper.checkAccess(document.getParentDirectory(), PermitType.READ);
+        return DocumentMapper.modelToDto(document);
     }
 
     @Override
@@ -106,15 +125,11 @@ public class DocumentServiceImpl implements DocumentService {
 
         Document document = findDocumentById(id);
 
+        AccessHelper.checkAccess(document.getParentDirectory(), PermitType.WRITE);
+
         sendNotification(document.getUser(), document.getId(), MessageType.DELETE);
 
         documentRepository.delete(document);
-    }
-
-    @Override
-    @Transactional
-    public List<DocumentVersion> getAllVersionByDocumentId(Long id) {
-        return findDocumentById(id).getVersions();
     }
 
     @Override
@@ -141,7 +156,9 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     @Transactional
     public List<OutputDocumentVersionDto> getDocumentVersionsById(Long id) {
-        return findDocumentById(id).getVersions()
+        Document document = findDocumentById(id);
+        AccessHelper.checkAccess(document.getParentDirectory(), PermitType.READ);
+        return document.getVersions()
                 .stream()
                 .map(DocumentMapper::modelToVersionDto)
                 .collect(Collectors.toList());
@@ -150,15 +167,30 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     @Transactional
     public Page<OutputDocumentDto> getAllDocuments(int page) {
-        return documentRepository.findAllByStatus(ModerationStatus.CONFIRMED, PageRequest.of(page, 10, Sort.by("documentPriority")))
-                .map(DocumentMapper::modelToDto);
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("documentPriority"));
+
+        List<Document> visibleDocuments = documentRepository.findAllByStatus(ModerationStatus.CONFIRMED)
+                .stream()
+                .filter(doc -> AccessHelper.checkAccessBoolean(doc.getParentDirectory(), PermitType.READ))
+                .collect(Collectors.toList());
+
+        Page<Document> documents = new PageImpl<>(visibleDocuments, pageable, visibleDocuments.size());
+
+        return documents.map(DocumentMapper::modelToDto);
     }
 
     @Override
     @Transactional
     public Page<OutputDocumentDto> getDocumentsByType(String type, int page) {
-        return documentRepository.findAllByTypeTypeAndStatus(type.toUpperCase(), ModerationStatus.CONFIRMED, PageRequest.of(page, 5))
-                .map(DocumentMapper::modelToDto);
+        Pageable pageable = PageRequest.of(page, 10);
+
+        List<Document> visibleDocuments = documentRepository.findAllByTypeTypeAndStatus(type.toUpperCase(), ModerationStatus.CONFIRMED)
+                .stream()
+                .filter(doc -> AccessHelper.checkAccessBoolean(doc.getParentDirectory(), PermitType.READ))
+                .collect(Collectors.toList());
+
+        Page<Document> documents = new PageImpl<>(visibleDocuments, pageable, visibleDocuments.size());
+        return documents.map(DocumentMapper::modelToDto);
     }
 
     private Document findDocumentById(Long id) {
@@ -181,4 +213,5 @@ public class DocumentServiceImpl implements DocumentService {
             log.error("Can't sent email", e);
         }
     }
+
 }
