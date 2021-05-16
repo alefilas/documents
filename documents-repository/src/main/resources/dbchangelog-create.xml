@@ -107,8 +107,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="user_id" type="integer">
-                <constraints references="users
-                (id)" foreignKeyName="fk_document_user"/>
+                <constraints references="users(id)" foreignKeyName="fk_document_user"/>
             </column>
         </createTable>
     </changeSet>

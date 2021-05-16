@@ -51,7 +51,7 @@ public class DocumentController {
         return ResponseEntity.ok(documents);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<OutputDocumentDto> addDocument(@RequestBody InputDocumentDto documentDto) {
         OutputDocumentDto savedDto = service.save(documentDto);
         return ResponseEntity.ok(savedDto);
@@ -59,7 +59,8 @@ public class DocumentController {
 
     @PostMapping("/{id}/versions")
     public ResponseEntity<OutputDocumentVersionDto> addVersion(@RequestBody InputDocumentVersionDto version, @PathVariable Long id) {
-        return ResponseEntity.ok(service.save(version, id));
+        OutputDocumentVersionDto versionDto = service.save(version, id);
+        return ResponseEntity.ok(versionDto);
     }
 
     @DeleteMapping("/{id}")

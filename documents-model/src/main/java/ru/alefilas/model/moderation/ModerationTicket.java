@@ -15,7 +15,7 @@ public class ModerationTicket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "document_id")
     private Document document;
 

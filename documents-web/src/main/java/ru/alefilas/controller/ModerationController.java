@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.alefilas.dto.moderation.ModerationResult;
 import ru.alefilas.dto.moderation.ModerationTicketDto;
+import ru.alefilas.model.moderation.ModerationTicket;
 import ru.alefilas.service.ModerationService;
 
 @RestController
@@ -21,7 +22,13 @@ public class ModerationController {
         return ResponseEntity.ok(tickets);
     }
 
-    @PostMapping("/")
+    @GetMapping("/{id}")
+    public ResponseEntity<ModerationTicketDto> getTicketByDocument(@PathVariable Long id) {
+        ModerationTicketDto ticket = service.getTicketForDocument(id);
+        return ResponseEntity.ok(ticket);
+    }
+
+    @PostMapping
     public void moderate(@RequestBody ModerationResult result) {
         service.moderate(result);
     }

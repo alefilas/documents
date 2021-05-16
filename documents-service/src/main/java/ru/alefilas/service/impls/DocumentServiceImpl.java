@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 public class DocumentServiceImpl implements DocumentService {
 
     @Autowired
@@ -72,7 +71,7 @@ public class DocumentServiceImpl implements DocumentService {
             User user = userRepository.findByUsername(AccessHelper.getCurrentUser()).orElseThrow();
             document.setUser(user);
         } else {
-            sendNotification(document.getUser(), document.getId(), MessageType.CHANGE);
+            notificationService.send(document.getUser(), document.getId(), MessageType.CHANGE);
         }
 
         DocumentVersion version = document.getCurrentVersion();
@@ -103,7 +102,7 @@ public class DocumentServiceImpl implements DocumentService {
         if (documentVersion.getId() == null) {
             document.setStatus(ModerationStatus.ON_MODERATION);
             document.addVersion(documentVersion);
-            sendNotification(document.getUser(), documentId, MessageType.CHANGE);
+            notificationService.send(document.getUser(), documentId, MessageType.CHANGE);
         }
 
         DocumentVersion savedVersion = documentRepository.save(document).getCurrentVersion();
@@ -127,7 +126,7 @@ public class DocumentServiceImpl implements DocumentService {
 
         AccessHelper.checkAccess(document.getParentDirectory(), PermitType.WRITE);
 
-        sendNotification(document.getUser(), document.getId(), MessageType.DELETE);
+        notificationService.send(document.getUser(), document.getId(), MessageType.DELETE);
 
         documentRepository.delete(document);
     }
@@ -205,13 +204,4 @@ public class DocumentServiceImpl implements DocumentService {
             moderationRepository.save(ticket);
         }
     }
-
-    private void sendNotification(User user, Long id, MessageType type) {
-        try {
-            notificationService.send(user, id, type);
-        } catch (MessagingException e) {
-            log.error("Can't sent email", e);
-        }
-    }
-
 }

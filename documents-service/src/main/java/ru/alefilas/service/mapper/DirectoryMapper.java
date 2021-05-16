@@ -22,16 +22,15 @@ public class DirectoryMapper {
 
         Directory directory = new Directory();
 
-        Long id = dto.getId() == 0 ? null : dto.getId();
-        Long directoryId = dto.getDirectoryId() == 0 ? null : dto.getDirectoryId();
+        if (dto.getId() != null && dto.getId() != 0) {
+            directory.setId(dto.getId());
+        }
 
-
-        directory.setId(id);
         directory.setTitle(dto.getTitle());
 
-        if (directoryId != null) {
-            directory.setParentDirectory(directoryRepository.findById(directoryId).orElseThrow(
-                    () -> new DirectoryNotFoundException(directoryId)
+        if (dto.getDirectoryId() != null && dto.getDirectoryId() != 0) {
+            directory.setParentDirectory(directoryRepository.findById(dto.getDirectoryId()).orElseThrow(
+                    () -> new DirectoryNotFoundException(dto.getDirectoryId())
             ));
         }
 

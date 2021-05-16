@@ -13,9 +13,11 @@ import ru.alefilas.model.document.Document;
 import ru.alefilas.model.moderation.ModerationStatus;
 import ru.alefilas.model.moderation.ModerationTicket;
 import ru.alefilas.model.permit.PermitType;
+import ru.alefilas.repository.DocumentRepository;
 import ru.alefilas.repository.ModerationRepository;
 import ru.alefilas.service.ModerationService;
 import ru.alefilas.service.access.AccessHelper;
+import ru.alefilas.service.exception.DocumentNotFoundException;
 import ru.alefilas.service.exception.ModerationTicketNotFoundException;
 import ru.alefilas.service.mapper.ModerationMapper;
 
@@ -27,6 +29,9 @@ public class ModerationServiceImpl implements ModerationService {
 
     @Autowired
     private ModerationRepository moderationRepository;
+
+    @Autowired
+    private DocumentRepository documentRepository;
 
     @Override
     @Transactional
@@ -59,5 +64,21 @@ public class ModerationServiceImpl implements ModerationService {
 
         Document document = ticket.getDocument();
         document.setStatus(result.getResult());
+
+        documentRepository.save(document);
+    }
+
+    @Override
+    @Transactional
+    public ModerationTicketDto getTicketForDocument(Long id) {
+        Document document = documentRepository.findById(id).orElseThrow(
+                () -> new DocumentNotFoundException(id)
+        );
+
+        ModerationTicket ticket = moderationRepository.findFirstByDocument(document).orElseThrow(
+                () -> new ModerationTicketNotFoundException("Ticket not found")
+        );
+
+        return ModerationMapper.modelToDto(ticket);
     }
 }

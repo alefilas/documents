@@ -23,7 +23,7 @@
         </dependency>
         <dependency>
             <groupId>ru.alefilas</groupId>
-            <artifactId>doecuments-web</artifactId>
+            <artifactId>documents-web</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

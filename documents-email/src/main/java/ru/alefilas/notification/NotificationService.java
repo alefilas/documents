@@ -9,7 +9,7 @@ import java.util.Properties;
 
 public interface NotificationService {
 
-    void send(User user, Long id, MessageType type) throws MessagingException;
+    void send(User user, Long id, MessageType type);
 
     void setConnectionSettings(Properties properties);
 
