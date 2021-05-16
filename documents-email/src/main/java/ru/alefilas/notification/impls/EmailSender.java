@@ -1,5 +1,6 @@
 package ru.alefilas.notification.impls;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.alefilas.model.user.User;
@@ -12,8 +13,11 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 
 @Service
+@Slf4j
 public class EmailSender implements NotificationService {
 
     @Autowired
@@ -22,8 +26,11 @@ public class EmailSender implements NotificationService {
     @Autowired
     private EmailSettings emailSettings;
 
+    @Autowired
+    private ExecutorService executorService;
+
     @Override
-    public void send(User user, Long id, MessageType type) throws MessagingException {
+    public void send(User user, Long id, MessageType type) {
 
         Session session = Session.getInstance(emailProperties, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -31,16 +38,28 @@ public class EmailSender implements NotificationService {
             }
         });
 
-        Message msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress(emailSettings.getEmail()));
+        try {
+            Message msg = new MimeMessage(session);
+            msg.setFrom(new InternetAddress(emailSettings.getEmail()));
 
-        msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
-        msg.setSubject(type.getSubject());
-        msg.setText(
-                String.format(type.getText(), user.getUsername(), id)
-        );
+            msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail()));
+            msg.setSubject(type.getSubject());
+            msg.setText(
+                    String.format(type.getText(), user.getUsername(), id)
+            );
 
-        Transport.send(msg);
+            executorService.submit(
+                    () -> {
+                        try {
+                            Transport.send(msg);
+                        } catch (MessagingException e) {
+                            log.error("Can't send email", e);
+                        }
+                    }
+            );
+        } catch (MessagingException e) {
+            log.error("Can't send email", e);
+        }
     }
 
     @Override

@@ -29,7 +29,7 @@ public class DirectoryController {
         return ResponseEntity.ok(service.getEntitiesByDirectoryId(id));
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<OutputDirectoryDto> addDirectory(@RequestBody InputDirectoryDto inputDirectoryDto) {
         OutputDirectoryDto savedDto = service.save(inputDirectoryDto);
         return ResponseEntity.ok(savedDto);

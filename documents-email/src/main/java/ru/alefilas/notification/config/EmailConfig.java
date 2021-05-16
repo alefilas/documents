@@ -1,11 +1,14 @@
 package ru.alefilas.notification.config;
 
+import javassist.bytecode.analysis.Executor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import ru.alefilas.notification.model.EmailSettings;
 
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Configuration
 @ComponentScan("ru.alefilas.notification")
@@ -29,5 +32,10 @@ public class EmailConfig {
         settings.setEmail("documentsApp@yandex.ru");
         settings.setPassword("Test123");
         return settings;
+    }
+
+    @Bean
+    public ExecutorService executorService() {
+        return Executors.newCachedThreadPool();
     }
 }

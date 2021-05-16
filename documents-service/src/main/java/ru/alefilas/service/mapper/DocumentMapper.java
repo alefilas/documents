@@ -48,11 +48,7 @@ public class DocumentMapper {
 
         Document document = new Document();
 
-        Long id = dto.getId() == 0 ? null : dto.getId();
-
-        Long directoryId = dto.getDirectoryId() == 0 ? null : dto.getDirectoryId();
-
-        DocumentVersion version = versionDtoToModel(dto.getCurrentVersion(), id);
+        Long id = null;
 
         DocumentPriority priority = dto.getDocumentPriority();
 
@@ -72,20 +68,23 @@ public class DocumentMapper {
 
         User user = null;
 
-        if(id != null) {
-            Document doc = documentRepository.findById(id)
-                    .orElseThrow(() -> new DocumentNotFoundException(id));
+        if(dto.getId() != null && dto.getId() != 0) {
+            Document doc = documentRepository.findById(dto.getId())
+                    .orElseThrow(() -> new DocumentNotFoundException(dto.getId()));
 
             versions = doc.getVersions();
             status = doc.getStatus();
             creationDate = doc.getCreationDate();
             user = doc.getUser();
+            id = dto.getId();
         }
 
-        if (directoryId != null) {
-            parentDirectory = directoryRepository.findById(directoryId)
-                    .orElseThrow(() -> new DirectoryNotFoundException(directoryId));
+        if (dto.getDirectoryId() != null && dto.getDirectoryId() != 0) {
+            parentDirectory = directoryRepository.findById(dto.getDirectoryId())
+                    .orElseThrow(() -> new DirectoryNotFoundException(dto.getDirectoryId()));
         }
+
+        DocumentVersion version = versionDtoToModel(dto.getCurrentVersion(), id);
 
         document.setId(id);
         document.setCurrentVersion(version);

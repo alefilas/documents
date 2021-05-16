@@ -19,11 +19,11 @@ public class Permit {
     @Column(name = "permit_type")
     private PermitType permitType;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "directory_id")
     private Directory directory;
 }
