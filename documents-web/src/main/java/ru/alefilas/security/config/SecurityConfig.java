@@ -41,7 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/documents/**", "directories/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
+        http.authorizeRequests().antMatchers("/", "/index.html", "/styles.css", "/app.js", "/favicon.ico").permitAll()
+                .and()
+                .authorizeRequests().antMatchers("/documents/**", "/directories/**").hasAnyRole("USER", "MODERATOR", "ADMIN")
                 .and()
                 .authorizeRequests().antMatchers("/moderation/**").hasAnyRole("ADMIN", "MODERATOR")
                 .and()
