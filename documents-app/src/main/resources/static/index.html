@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Documents UI</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="bg-glow"></div>
+<main class="app-shell">
+  <header class="hero card">
+    <div>
+      <p class="eyebrow">Document Workflow Console</p>
+      <h1>Управление документами, доступами и модерацией</h1>
+      <p class="muted">UI для backend API: документы, директории, модерация и администрирование.</p>
+    </div>
+    <div class="auth-box">
+      <h2>Вход</h2>
+      <form id="login-form" class="grid-form compact">
+        <label>Логин
+          <input type="text" name="username" placeholder="username" required>
+        </label>
+        <label>Пароль
+          <input type="password" name="password" placeholder="password" required>
+        </label>
+        <button type="submit">Войти</button>
+      </form>
+      <button class="ghost" id="logout-btn">Выйти</button>
+      <p id="auth-status" class="muted">Не авторизован</p>
+    </div>
+  </header>
+
+  <section class="panel-grid">
+    <article class="card">
+      <h3>Документы</h3>
+      <div class="toolbar">
+        <button data-action="load-documents">Загрузить список</button>
+        <input id="documents-page" type="number" min="0" value="0" title="page">
+      </div>
+      <form id="create-document-form" class="grid-form">
+        <label>Directory ID<input type="number" name="directoryId" required></label>
+        <label>Тип документа<input type="text" name="type" placeholder="TYPE"></label>
+        <label>Приоритет
+          <select name="documentPriority">
+            <option>HIGH</option>
+            <option selected>MEDIUM</option>
+            <option>LOW</option>
+          </select>
+        </label>
+        <label>Заголовок<input type="text" name="title" required></label>
+        <label>Описание<textarea name="description" rows="2" required></textarea></label>
+        <label>Файлы (через запятую)<input type="text" name="files" placeholder="file1.pdf,file2.jpg"></label>
+        <button type="submit">Создать документ</button>
+      </form>
+    </article>
+
+    <article class="card">
+      <h3>Директории</h3>
+      <div class="toolbar">
+        <label>ID директории<input id="directory-id" type="number" min="1"></label>
+        <button data-action="load-directory">Открыть директорию</button>
+      </div>
+      <form id="create-directory-form" class="grid-form compact">
+        <label>Родительская ID (опц.)<input type="number" name="directoryId"></label>
+        <label>Название<input type="text" name="title" required></label>
+        <button type="submit">Создать директорию</button>
+      </form>
+    </article>
+
+    <article class="card">
+      <h3>Модерация</h3>
+      <div class="toolbar">
+        <button data-action="load-tickets">Загрузить тикеты</button>
+        <input id="tickets-page" type="number" min="0" value="0" title="page">
+      </div>
+      <form id="moderate-form" class="grid-form compact">
+        <label>Ticket ID<input type="number" name="ticketId" required></label>
+        <label>Решение
+          <select name="result">
+            <option>CONFIRMED</option>
+            <option>REJECTED</option>
+          </select>
+        </label>
+        <button type="submit">Применить</button>
+      </form>
+    </article>
+
+    <article class="card">
+      <h3>Администрирование</h3>
+      <form id="add-type-form" class="grid-form compact">
+        <label>Новый тип документа<input type="text" name="type" required></label>
+        <button type="submit">Добавить тип</button>
+      </form>
+      <form id="permit-form" class="grid-form compact">
+        <label>Username<input type="text" name="username" required></label>
+        <label>Directory ID<input type="number" name="directoryId" required></label>
+        <label>Permit
+          <select name="permitType">
+            <option>READ</option>
+            <option>WRITE</option>
+            <option>MODERATE</option>
+          </select>
+        </label>
+        <button type="submit">Выдать доступ</button>
+      </form>
+      <button data-action="load-permits">Показать права</button>
+    </article>
+  </section>
+
+  <section class="card output-card">
+    <div class="output-head">
+      <h3>Ответ API</h3>
+      <button id="clear-output" class="ghost">Очистить</button>
+    </div>
+    <pre id="output">{
+  "status": "ready"
+}</pre>
+  </section>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>
